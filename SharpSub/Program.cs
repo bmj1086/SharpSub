@@ -15,7 +15,7 @@ namespace SharpSub
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new SetupWindow());
+            Application.Run(new SetupForm());
         }
     }
 }
