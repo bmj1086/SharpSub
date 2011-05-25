@@ -21,7 +21,7 @@ namespace SharpSub
         private const string TEST_URL = "http://{URL}/rest/{TYPE}.view?u={USERNAME}&p={ENCODEDURL}&v={VERSION}.0&c={APPNAME}";
 
         // returns true if the connection worked, else returns false
-        internal static bool TestConnection(string url, string username, string password)
+        public static bool TestConnection(string url, string username, string password)
         {
             CurrentUrl = url.Replace("http://", String.Empty);
             CurrentUsername = username;
