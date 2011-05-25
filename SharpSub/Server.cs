@@ -10,7 +10,7 @@ using System.Diagnostics;
 
 namespace SharpSub
 {
-    class Server
+    public class Server
     {
         public static string CurrentUrl { get; set; }
         public static string CurrentUsername { get; set; }
