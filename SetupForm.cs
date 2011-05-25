@@ -9,11 +9,16 @@ using System.Windows.Forms;
 
 namespace SharpSub
 {
-    public partial class SetupWindow : Form
+    public partial class SetupForm : Form
     {
-        public SetupWindow()
+        public SetupForm()
         {
             InitializeComponent();
+        }
+
+        private void newTestConnButton_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
