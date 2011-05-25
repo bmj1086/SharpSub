@@ -114,7 +114,6 @@
             // 
             // newTestConnButton
             // 
-            this.newTestConnButton.Enabled = false;
             this.newTestConnButton.Location = new System.Drawing.Point(170, 147);
             this.newTestConnButton.Name = "newTestConnButton";
             this.newTestConnButton.Size = new System.Drawing.Size(118, 23);

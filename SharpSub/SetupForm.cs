@@ -24,7 +24,7 @@ namespace SharpSub
             string username = newUsernameTextbox.Text.Trim();
             string password = newPasswordTextbox.Text.Trim();
 
-            var testOkay = Server.TextConnection(url: url, username: username, password: password);
+            var testOkay = Server.TestConnection(url: url, username: username, password: password);
 
             if (!testOkay)
             {

@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Configuration;
 using System.Net;
 using System.IO;
 using System.Xml;
+using System.Diagnostics;
 
 namespace SharpSub
 {
@@ -19,15 +21,17 @@ namespace SharpSub
         private const string TEST_URL = "http://{URL}/rest/{TYPE}.view?u={USERNAME}&p={ENCODEDURL}&v={VERSION}.0&c={APPNAME}";
 
         // returns true if the connection worked, else returns false
-        internal static bool TextConnection(string url, string username, string password)
+        internal static bool TestConnection(string url, string username, string password)
         {
-            CurrentUrl = url;
+            CurrentUrl = url.Replace("http://", String.Empty);
             CurrentUsername = username;
-            CurrentPassword = password;
+            CurrentPassword = System.Web.HttpUtility.UrlEncode(password);
             
             try
             {
-                HttpWebRequest req = WebRequest.Create(BuildUrl(RequestType.ping, url:url, username:username, password:password)) 
+                string sTmpUrl = BuildGenericUrl(RequestType.ping);
+                
+                HttpWebRequest req = WebRequest.Create(new Uri(sTmpUrl)) 
                                      as HttpWebRequest;
 
                 XmlDocument xmlResult = new XmlDocument();
@@ -40,25 +44,29 @@ namespace SharpSub
                 {
                     StreamReader reader =
                         new StreamReader(resp.GetResponseStream());
+                    string test = reader.ReadToEnd();
                     xmlResult.Load(reader.ReadToEnd());
                 }
 
                 Connected = true;
                 return true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Debug.WriteLine(ex);
                 Connected = false;
                 return false;
             }
         }
 
-        private static Uri BuildUrl(RequestType requestType, string url, string username, string password)
+        private static string BuildGenericUrl(RequestType requestType)
         {
-            if (requestType == RequestType.ping)
-            {
-                
-            }
+            //http://{URL}/rest/{TYPE}.view?u={USERNAME}&p={ENCODEDURL}&v={VERSION}.0&c={APPNAME}
+            //TODO: add app version and app name to appconfig
+            var theReturn = String.Format(@"http://{0}/rest/{1}.view?u={2}&p={3}&v={4}.0&c={5}", 
+                                          CurrentUrl, requestType, CurrentUsername, CurrentPassword, "1.5", "SharpSub");
+
+            return theReturn;
         }
 
         public static void ResetServerSettings()
