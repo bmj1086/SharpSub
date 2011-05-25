@@ -9,9 +9,9 @@ using System.Windows.Forms;
 
 namespace SharpSub
 {
-    public partial class Form1 : Form
+    public partial class SetupWindow : Form
     {
-        public Form1()
+        public SetupWindow()
         {
             InitializeComponent();
         }
