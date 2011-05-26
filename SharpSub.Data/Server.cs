@@ -5,6 +5,7 @@ using System.Text;
 using System.Configuration;
 using System.Net;
 using System.IO;
+using System.Web;
 using System.Xml;
 using System.Diagnostics;
 
@@ -25,7 +26,7 @@ namespace SharpSub
         {
             CurrentUrl = url.Replace("http://", String.Empty);
             CurrentUsername = username;
-            CurrentPassword = System.Web.HttpUtility.UrlEncode(password);
+            CurrentPassword = HttpUtility.UrlEncode(password);
             
             try
             {
@@ -42,14 +43,16 @@ namespace SharpSub
                 using (HttpWebResponse resp = req.GetResponse()
                                                 as HttpWebResponse)
                 {
-                    StreamReader reader =
-                        new StreamReader(resp.GetResponseStream());
-                    string test = reader.ReadToEnd();
-                    xmlResult.Load(reader.ReadToEnd());
+                    StreamReader reader = new StreamReader(resp.GetResponseStream());
+                    var responseText = reader.ReadToEnd().Normalize();
+                    xmlResult.LoadXml(responseText);
                 }
 
-                Connected = true;
-                return true;
+                var status = xmlResult.GetElementsByTagName("subsonic-response")[0].Attributes["status"].Value;
+
+                Connected = (status == "ok");
+                return (status == "ok");
+
             }
             catch (Exception ex)
             {
@@ -61,7 +64,6 @@ namespace SharpSub
 
         private static string BuildGenericUrl(RequestType requestType)
         {
-            //http://{URL}/rest/{TYPE}.view?u={USERNAME}&p={ENCODEDURL}&v={VERSION}.0&c={APPNAME}
             //TODO: add app version and app name to appconfig
             var theReturn = String.Format(@"http://{0}/rest/{1}.view?u={2}&p={3}&v={4}.0&c={5}", 
                                           CurrentUrl, requestType, CurrentUsername, CurrentPassword, "1.5", "SharpSub");
