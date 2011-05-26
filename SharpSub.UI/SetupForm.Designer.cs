@@ -120,7 +120,7 @@
             this.newTestConnButton.TabIndex = 9;
             this.newTestConnButton.Text = "Test Connection";
             this.newTestConnButton.UseVisualStyleBackColor = true;
-            this.newTestConnButton.Click += new System.EventHandler(this.newTestConnButton_Click);
+            this.newTestConnButton.Click += new System.EventHandler(this.NewTestConnButtonClick);
             // 
             // newAutoConnCheckbox
             // 

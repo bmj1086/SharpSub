@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Diagnostics;
+using SharpSub.Data;
 
 namespace SharpSub
 {
@@ -29,7 +30,7 @@ namespace SharpSub
             newPasswordTextbox.Text = ConfigurationManager.AppSettings["TestServerPassword"];
         }
 
-        private void newTestConnButton_Click(object sender, EventArgs e)
+        private void NewTestConnButtonClick(object sender, EventArgs e)
         {
             string url = newUrlTextbox.Text.Trim();
             string name = newConnectionNameTextbox.Text.Trim();
