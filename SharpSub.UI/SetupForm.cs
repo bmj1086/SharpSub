@@ -41,7 +41,7 @@ namespace SharpSub
 
             if (!testOkay)
             {
-                //TODO: tell UI that the server didn't connect
+               //TODO: tell UI that the server didn't connect
                 MessageBox.Show("Server did not connect");
                 Debug.WriteLine("Test connection failed");
             }    
