@@ -8,6 +8,7 @@ using System.IO;
 using System.Web;
 using System.Xml;
 using System.Diagnostics;
+using NAudio.Wave;
 
 namespace SharpSub
 {
@@ -64,7 +65,9 @@ namespace SharpSub
         {
             //TODO: add app version and app name to appconfig
             var theReturn = String.Format(@"http://{0}/rest/{1}.view?u={2}&p={3}&v={4}.0&c={5}", 
-                                          CurrentUrl, requestType, CurrentUsername, CurrentPassword, "1.5", "SharpSub");
+                                          CurrentUrl, requestType, CurrentUsername, CurrentPassword, 
+                                          ConfigurationManager.AppSettings["RestVersion"], 
+                                          ConfigurationManager.AppSettings["AppName"]);
 
             return theReturn;
         }
@@ -77,7 +80,36 @@ namespace SharpSub
             Connected = false;
 
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="songId">A string which uniquely identifies the file to stream. Obtained by calls to getMusicDirectory.</param>
+        /// <param name="maxBitRate">(Since 1.2.0) If specified, the server will attempt to limit the bitrate to this value, in kilobits per second. If set to zero, no limit is imposed. Legal values are: 0, 32, 40, 48, 56, 64, 80, 96, 112, 128, 160, 192, 224, 256 and 320.</param>
+        /// <returns></returns>
+        public static Stream StreamSong(string songId, int maxBitRate = 0)
+        {
+            try
+            {
+                if (!Connected)
+                    return null;
+
+                string requestUrl = String.Format("{0}&maxBitRate={1}", BuildGenericUrl(RequestType.stream), maxBitRate);
+
+                var request = WebRequest.Create(requestUrl);
+                var response = request.GetResponse();
+
+                var dataStream = response.GetResponseStream();
+                return dataStream;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
     }
+
+
 
     public enum RequestType
     {
