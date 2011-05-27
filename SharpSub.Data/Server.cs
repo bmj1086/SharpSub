@@ -19,17 +19,15 @@ namespace SharpSub
         public static bool Connected { get; private set; }
 
 
-        private const string TEST_URL = "http://{URL}/rest/{TYPE}.view?u={USERNAME}&p={ENCODEDURL}&v={VERSION}.0&c={APPNAME}";
-
         // returns true if the connection worked, else returns false
         public static bool TestConnection(string url, string username, string password)
         {
-            CurrentUrl = url.Replace("http://", String.Empty);
-            CurrentUsername = username;
-            CurrentPassword = HttpUtility.UrlEncode(password);
-            
             try
             {
+                CurrentUrl = url.Replace("http://", String.Empty);
+                CurrentUsername = username;
+                CurrentPassword = HttpUtility.UrlEncode(password);
+
                 string sTmpUrl = BuildGenericUrl(RequestType.ping);
                 
                 HttpWebRequest req = WebRequest.Create(new Uri(sTmpUrl)) 

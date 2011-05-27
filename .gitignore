@@ -3,6 +3,7 @@
 Thumbs.db
 #Ignore files build by Visual Studio
 .gitignore
+*.Tests*/
 *.obj
 *.exe
 *.pdb
