@@ -2,7 +2,7 @@
 using System.Configuration;
 using System.Windows.Forms;
 using SharpSub.Data;
-using SharpSub.Data.SubsonicAPIClasses;
+using SharpSub.Data.SubsonicItemTypes;
 using SubsonicAPI;
 using System.Diagnostics;
 

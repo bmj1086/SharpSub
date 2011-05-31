@@ -1,30 +1,12 @@
-﻿/*------------------Error Code Descriptions-------------------------------------------------------------
-The following error codes are defined:
-
-Code	Description
-0	    A generic error.
-10	    Required parameter is missing.
-20	    Incompatible Subsonic REST protocol version. Client must upgrade.
-30	    Incompatible Subsonic REST protocol version. Server must upgrade.
-40	    Wrong username or password.
-50	    User is not authorized for the given operation.
-60	    The trial period for the Subsonic server is over. Please donate to get a license key. Visit subsonic.org for details.
-70	    The requested data was not found.
-
- */
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System;
 using System.Reflection;
-using System.Text;
 
 namespace SharpSub.Data
 {
     public enum RestError
     {
         [ErrorAttribute("A generic error")]
-        Generic=0,
+        Generic = 0,
 
         [ErrorAttribute("Required parameter is missing")]
         MissingParamater = 10,
@@ -83,5 +65,8 @@ namespace SharpSub.Data
             // Return the first if there was a match.
             return attribs.Length > 0 ? attribs[0].Value : null;
         }
+    
+
+
     }
 }

@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using NAudio.Wave;
-using SharpSub.Data.SubsonicAPIClasses;
+using SharpSub.Data.SubsonicItemTypes;
 using SubsonicAPI;
 
 namespace SharpSub.Data

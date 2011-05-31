@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Xml;
 
 namespace SharpSub.Data
@@ -36,38 +39,39 @@ namespace SharpSub.Data
         public string Password { get; set; }
     }
 
-    /// <summary>
-    /// Url Paramaters
-    /// </summary>
-    public class Paramater
+    public class Parameter
     {
-        public Paramater(string key, string value)
+        public Parameter(string key, string value)
         {
-            Key = key;
+            Key = key.ToString();
             Value = value;
         }
 
-        public string Key { get; set; }
-        public string Value { get; set; }
-    }
+        public string Key { get; protected set; }
+        public string Value { get; protected set; }
 
-    public enum ParamaterType
-    {
-        
     }
 
     /// <summary>
     /// Use for subsonic objects
     /// </summary>
-    public interface SubsonicObject
+    public class SubsonicItem
     {
-        string ID { get; set; }
-        SubsonicItemType ItemType { get; set; }
-    }
+        public SubsonicItem(XmlElement itemElement, SubsonicItemType itemType)
+        {
+            Element = itemElement;
+            ItemType = itemType;
+        }
 
-    public enum SubsonicItemType
-    {
-        Artist, Album, Song
+        public SubsonicItemType ItemType { get; protected set; }
+        XmlElement Element { get; set; }
+        XmlAttributeCollection ObjectAttributes { get; set; }
+        
+        public enum SubsonicItemType
+        {
+            Artist, Album, Song
+        }
+
     }
 
     public class SubsonicResponse
@@ -89,7 +93,7 @@ namespace SharpSub.Data
         {
             get
             {
-                return ResponseXml == null ? false : Status == "ok";
+                return Status == null ? false : Status == "ok";
             }  
         }
 
