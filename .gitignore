@@ -4,6 +4,7 @@ Thumbs.db
 #Ignore files build by Visual Studio
 .gitignore
 *.Tests*/
+*NotMine*
 *.obj
 *.exe
 *.pdb
