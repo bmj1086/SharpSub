@@ -19,12 +19,12 @@ namespace SharpSub.Data
             CurrentUser = new User(username, password);
             Connected = true;
 
-            var paramaters = new List<Parameter>()
+            var paramaters = new Dictionary<string, string>()
                                  {
-                                     new Parameter("u", CurrentUser.Username),
-                                     new Parameter("p", CurrentUser.Password),
-                                     new Parameter("v", "1.5.0"),
-                                     new Parameter("c", "SharpSub")
+                                     {"u", CurrentUser.Username},
+                                     {"p", CurrentUser.Password},
+                                     {"v", "1.5.0"},
+                                     {"c", "SharpSub"}
                                  };
 
             SubsonicResponse response = Ping();
@@ -46,10 +46,10 @@ namespace SharpSub.Data
         /// <returns>MP3 Stream</returns>
         public static Stream GetSongStream(string id, int maxBitRate = 0)
         {
-            List<Parameter> parameters = new List<Parameter>()
+            var parameters = new Dictionary<string, string>()
                                              {
-                                                 new Parameter("id", id),
-                                                 new Parameter("maxBitRate", maxBitRate.ToString())
+                                                 {"id", id},
+                                                 {"maxBitRate", maxBitRate.ToString()}
                                              };
 
             string requestURL = BuildRequestURL(RequestType.stream, parameters);
@@ -61,10 +61,11 @@ namespace SharpSub.Data
         
         private static SubsonicResponse Ping()
         {
-            List<Parameter> parameters = new List<Parameter>{
-                                                                new Parameter("u", CurrentUser.Username), 
-                                                                new Parameter("p", CurrentUser.Password)
-                                                            };
+            var parameters = new Dictionary<string, string>()
+                                 {
+                                     {"u", CurrentUser.Username},
+                                     {"p", CurrentUser.Password}
+                                 };                
 
             string requestURL = BuildRequestURL(RequestType.ping, parameters);
             WebRequest theRequest = WebRequest.Create(requestURL);
@@ -89,7 +90,14 @@ namespace SharpSub.Data
             
         }
 
-        private static string BuildRequestURL(RequestType requestType, IEnumerable<Parameter> parameters)
+        /// <summary>
+        /// Used to build a URL (in string format) to request information from the server. 
+        /// Should not be used by the EDT.
+        /// </summary>
+        /// <param name="requestType">The request type. Comes after /rest/ in the url.</param>
+        /// <param name="additionalParameters">Parameters required by the request type</param>
+        /// <returns>URL in string format to use to get the request.</returns>
+        private static string BuildRequestURL(RequestType requestType, Dictionary<string, string> additionalParameters)
         {
             StringBuilder sUrlBuilder = new StringBuilder();
             sUrlBuilder.Append("http://");
@@ -101,12 +109,10 @@ namespace SharpSub.Data
             sUrlBuilder.Append(CurrentUser.Username);
             sUrlBuilder.Append("&p=");
             sUrlBuilder.Append(CurrentUser.Password);
-            //http: //192.168.1.4/music/rest/getMusicDirectory.view?&u=Guest&p=notbrett&v=1.5.0&c=SharpSub
-            //Guest?p=notbrett" + "?v=" + apiVersion + "&c=" + appName)
-
-            if (parameters != null)
+            
+            if (additionalParameters != null)
             {
-                foreach (var parameter in parameters)
+                foreach (var parameter in additionalParameters)
                 {
                     sUrlBuilder.Append("&");
                     sUrlBuilder.Append(parameter.Key);

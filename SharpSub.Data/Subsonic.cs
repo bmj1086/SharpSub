@@ -39,19 +39,6 @@ namespace SharpSub.Data
         public string Password { get; set; }
     }
 
-    public class Parameter
-    {
-        public Parameter(string key, string value)
-        {
-            Key = key.ToString();
-            Value = value;
-        }
-
-        public string Key { get; protected set; }
-        public string Value { get; protected set; }
-
-    }
-
     /// <summary>
     /// Use for subsonic objects
     /// </summary>
@@ -124,7 +111,7 @@ namespace SharpSub.Data
             }
         }
         
-        public RestError GetError()
+        public RestError? GetError()
         {
             try
             {
