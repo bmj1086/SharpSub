@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
+using System.Web;
 
 namespace SharpSub.Data.Tests
 {
@@ -64,6 +65,21 @@ namespace SharpSub.Data.Tests
         //
         #endregion
 
+
+        /// <summary>
+        ///A test for LogIn
+        ///</summary>
+        [TestMethod()]
+        public void LogInTest()
+        {
+            string serverURL = "bjones.subsonic.org";
+            string username = "Guest";
+            string password = HttpUtility.UrlEncode("notbrett");
+            bool expected = true; 
+            Subsonic.Response response = SubsonicRequest.LogIn(serverURL, username, password);
+            bool actual = response.Successful;
+            Assert.AreEqual(expected, actual);
+        }
 
         /// <summary>
         ///A test for BuildRequestURL

@@ -6,7 +6,7 @@
     <ProductVersion>
     </ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{D37548AE-1B4B-4457-8FFD-A24BCC46C557}</ProjectGuid>
+    <ProjectGuid>{6989D3D4-33DE-4652-A932-1DCB6AE2C703}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>SharpSub.Data.Tests</RootNamespace>
@@ -66,6 +66,9 @@
       <Project>{FAA358D6-F79A-42AE-9E85-3CDB3C59B424}</Project>
       <Name>SharpSub.Data</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -10,24 +10,16 @@ namespace SharpSub.Data
     {
         public static bool Connected { get; private set; }
         static public string ServerURL { get; private set;}
-        private static User CurrentUser { get; set; }
+        private static Subsonic.User CurrentUser { get; set; }
 
 
-        public static SubsonicResponse LogIn(string serverURL, string username, string password)
+        public static Subsonic.Response LogIn(string serverURL, string username, string urlEncodedPassword)
         {
             ServerURL = serverURL;
-            CurrentUser = new User(username, password);
+            CurrentUser = new Subsonic.User(username, urlEncodedPassword);
             Connected = true;
 
-            var paramaters = new Dictionary<string, string>()
-                                 {
-                                     {"u", CurrentUser.Username},
-                                     {"p", CurrentUser.Password},
-                                     {"v", "1.5.0"},
-                                     {"c", "SharpSub"}
-                                 };
-
-            SubsonicResponse response = Ping();
+            Subsonic.Response response = Ping();
 
             if (!response.Successful)
             {
@@ -59,22 +51,16 @@ namespace SharpSub.Data
             return dataStream;
         }
         
-        private static SubsonicResponse Ping()
+        private static Subsonic.Response Ping()
         {
-            var parameters = new Dictionary<string, string>()
-                                 {
-                                     {"u", CurrentUser.Username},
-                                     {"p", CurrentUser.Password}
-                                 };                
-
-            string requestURL = BuildRequestURL(RequestType.ping, parameters);
+            string requestURL = BuildRequestURL(RequestType.ping);
             WebRequest theRequest = WebRequest.Create(requestURL);
             WebResponse response = theRequest.GetResponse();
             StreamReader sr = new StreamReader(response.GetResponseStream());
             var xmlResultString = sr.ReadToEnd();
             XmlDocument responseXml = new XmlDocument();
             responseXml.LoadXml(xmlResultString);
-            return new SubsonicResponse(responseXml);
+            return new Subsonic.Response(responseXml);
 
         }
 
@@ -92,12 +78,12 @@ namespace SharpSub.Data
 
         /// <summary>
         /// Used to build a URL (in string format) to request information from the server. 
-        /// Should not be used by the EDT.
+        /// Should not be used by the EDT. Username and password are not additional params.
         /// </summary>
         /// <param name="requestType">The request type. Comes after /rest/ in the url.</param>
         /// <param name="additionalParameters">Parameters required by the request type</param>
         /// <returns>URL in string format to use to get the request.</returns>
-        private static string BuildRequestURL(RequestType requestType, Dictionary<string, string> additionalParameters)
+        private static string BuildRequestURL(RequestType requestType, Dictionary<string, string> additionalParameters = null)
         {
             StringBuilder sUrlBuilder = new StringBuilder();
             sUrlBuilder.Append("http://");
