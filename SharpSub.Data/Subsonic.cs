@@ -26,69 +26,37 @@ namespace SharpSub.Data
             get { return System.Configuration.ConfigurationManager.AppSettings["AppName"]; }
         }
 
-        public class User
-        {
-            public User(string username, string password)
-            {
-                Username = username;
-                Password = password;
-            }
-
-            public string Username { get; set; }
-            public string Password { get; set; }
-        }
-
         #region Subsonic Items eg. Album, Song, Artist
-        public class Album
+        public class Album : SubsonicItem
         {
-            XmlElement Element { get; set; }
-            XmlAttributeCollection Attributes { get; set; }
-
-            public Album(XmlElement itemElement)
+            public Album(XmlElement xmlElement)
             {
-                Element = itemElement;
-                Attributes = Element.Attributes;
-            }
-
-            public object GetAttribute(AlbumAttribute attribute)
-            {
-                try
-                {
-                    return Attributes[attribute.ToString()];
-                }
-                catch
-                {
-                    return null;
-                }
+                ObjectElement = xmlElement;
+                Attributes = ObjectElement.Attributes;
             }
 
             public enum AlbumAttribute
             {
                 id, parent, title, isDir, coverArt, artist
             }
+
+            public string GetAttribute(AlbumAttribute attribute)
+            {
+                return base.GetAttribute(attribute.ToString());
+            }
+            
         }
 
-        public class Song
+        public class Song : SubsonicItem
         {
-            XmlElement Element { get; set; }
-            XmlAttributeCollection Attributes { get; set; }
-
             public Song(XmlElement itemElement)
             {
-                Element = itemElement;
-                Attributes = Element.Attributes;
+                ObjectElement = itemElement;
             }
 
-            public object GetAttribute(SongAttribute attribute)
+            public string GetAttribute(SongAttribute attribute)
             {
-                try
-                {
-                    return Attributes[attribute.ToString()];
-                }
-                catch
-                {
-                    return null;
-                }
+                return base.GetAttribute(attribute.ToString());
             }
 
             public enum SongAttribute
@@ -98,22 +66,35 @@ namespace SharpSub.Data
             }
         }
 
-        public class Artist
+        public class Artist : SubsonicItem
         {
-            XmlElement Element { get; set; }
-            XmlAttributeCollection Attributes { get; set; }
-
             public Artist(XmlElement itemElement)
             {
-                Element = itemElement;
-                Attributes = Element.Attributes;
+                ObjectElement = itemElement;
             }
 
-            public object GetAttribute(ArtistAttribute attribute)
+            public string GetAttribute(ArtistAttribute attribute)
+            {
+                return base.GetAttribute(attribute.ToString());
+            }
+
+            public enum ArtistAttribute
+            {
+                id, name
+            }
+            
+        }
+        #endregion
+
+        public abstract class SubsonicItem
+        {
+            internal XmlElement ObjectElement { get; set; }
+            
+            internal string GetAttribute(string attribute)
             {
                 try
                 {
-                    return Attributes[attribute.ToString()];
+                    return ObjectElement.Attributes[attribute].ToString();
                 }
                 catch
                 {
@@ -121,12 +102,11 @@ namespace SharpSub.Data
                 }
             }
 
-            public enum ArtistAttribute
-            {
-                id, name
-            }
+            internal List<XmlAttribute> GetAttributes();
+        {
+            return ObjectElement.Attributes.Cast<XmlAttribute>().ToList();
         }
-        #endregion
+        }
 
         public class Response
         {
@@ -168,7 +148,7 @@ namespace SharpSub.Data
                 }
             }
 
-            public XmlDocument ResponseXml { get; set; }
+            public XmlDocument ResponseXml { get; protected set; }
 
             public string ResponseString
             {

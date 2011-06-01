@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Web;
+using System.Diagnostics;
 
 namespace SharpSub.Data.Tests
 {
@@ -70,31 +71,16 @@ namespace SharpSub.Data.Tests
         ///A test for LogIn
         ///</summary>
         [TestMethod()]
-        public void LogInTest()
+        public void LoginTest()
         {
             string serverURL = "bjones.subsonic.org";
             string username = "Guest";
-            string password = HttpUtility.UrlEncode("notbrett");
+            string password = "notbrett";
             bool expected = true; 
-            Subsonic.Response response = SubsonicRequest.LogIn(serverURL, username, password);
+            Subsonic.Response response = SubsonicRequest.Login(serverURL, username, password);
             bool actual = response.Successful;
             Assert.AreEqual(expected, actual);
         }
-
-        /// <summary>
-        ///A test for BuildRequestURL
-        ///</summary>
-        [TestMethod()]
-        [DeploymentItem("SharpSub.Data.dll")]
-        public void BuildRequestURLTest()
-        {
-            RequestType requestType = new RequestType(); // TODO: Initialize to an appropriate value
-            Dictionary<string, string> additionalParameters = null; // TODO: Initialize to an appropriate value
-            string expected = string.Empty; // TODO: Initialize to an appropriate value
-            string actual;
-            actual = SubsonicRequest_Accessor.BuildRequestURL(requestType, additionalParameters);
-            Assert.AreEqual(expected, actual);
-            Assert.Inconclusive("Verify the correctness of this test method.");
-        }
+        
     }
 }

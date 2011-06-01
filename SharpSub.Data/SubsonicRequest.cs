@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
+using System.Security.Authentication;
 using System.Text;
 using System.Xml;
 
@@ -10,24 +12,39 @@ namespace SharpSub.Data
     {
         public static bool Connected { get; private set; }
         static public string ServerURL { get; private set;}
-        private static Subsonic.User CurrentUser { get; set; }
+        private static string Username { get; set; }
+        private static string Password { get; set; }
+        private static readonly string NOT_CONNECTED_MESSAGE = "The server is not connected. Use the Login method first.";
+        private static readonly List<int> AllowedBitrates = new List<int>() {0, 32, 40, 48, 56, 64, 80, 96, 112, 128, 160, 192, 224, 256, 320};
 
-
-        public static Subsonic.Response LogIn(string serverURL, string username, string urlEncodedPassword)
+        /// <summary>
+        /// If successful, sets the Connected property to true and allows
+        /// other server requests to be performed.
+        /// </summary>
+        /// <param name="serverURL">The URL to the server. Do not include http://</param>
+        /// <param name="username"></param>
+        /// <param name="password">Raw password. This method will encode the password automatically</param>
+        /// <returns></returns>
+        public static Subsonic.Response Login(string serverURL, string username, string password)
         {
             ServerURL = serverURL;
-            CurrentUser = new Subsonic.User(username, urlEncodedPassword);
+            Username = username; 
+            Password = encodePassword(password);
             Connected = true;
 
             Subsonic.Response response = Ping();
 
             if (!response.Successful)
-            {
-                ResetServerInformation();
-            }
-
+                Logout();
+            
             return response;
 
+        }
+
+        private static string encodePassword(string password)
+        {
+            byte[] binary = Encoding.UTF8.GetBytes(password);
+            return BitConverter.ToString(binary).Replace("-", String.Empty);
         }
 
         /// <summary>
@@ -35,9 +52,21 @@ namespace SharpSub.Data
         /// </summary>
         /// <param name="id">A string which uniquely identifies the file to stream. Obtained by calls to getMusicDirectory.</param>
         /// <param name="maxBitRate">If specified, the server will attempt to limit the bitrate to this value, in kilobits per second. If set to zero, no limit is imposed. Legal values are: 0, 32, 40, 48, 56, 64, 80, 96, 112, 128, 160, 192, 224, 256 and 320.</param>
+        /// <exception cref="WebException">Thrown when the user is not logged in. This should be caught by the UI thread.</exception>
         /// <returns>MP3 Stream</returns>
         public static Stream GetSongStream(string id, int maxBitRate = 0)
         {
+            if (!Connected)
+                throw new InvalidCredentialException(NOT_CONNECTED_MESSAGE);
+
+            if (String.IsNullOrEmpty(id))
+                throw new ArgumentNullException(id);
+
+            if (!SupportedBitRate(maxBitRate))
+                throw new ArgumentOutOfRangeException(
+                    String.Format("This bitrate is not allowed. Allowed bitrates are {0}", 
+                                  String.Join(", ", AllowedBitrates)));
+
             var parameters = new Dictionary<string, string>()
                                              {
                                                  {"id", id},
@@ -49,6 +78,11 @@ namespace SharpSub.Data
             WebResponse response = request.GetResponse();
             Stream dataStream = response.GetResponseStream();
             return dataStream;
+        }
+
+        private static bool SupportedBitRate(int maxBitRate)
+        {
+            return AllowedBitrates.Contains(maxBitRate);
         }
         
         private static Subsonic.Response Ping()
@@ -68,12 +102,13 @@ namespace SharpSub.Data
         /// Changes the server state to not connected and removes the current
         /// server url and user information.
         /// </summary>
-        public static void ResetServerInformation()
+        public static void Logout()
         {
             Connected = false;
             ServerURL = null;
-            CurrentUser = null;
-            
+            Username = null;
+            Password = null;
+
         }
 
         /// <summary>
@@ -85,6 +120,9 @@ namespace SharpSub.Data
         /// <returns>URL in string format to use to get the request.</returns>
         private static string BuildRequestURL(RequestType requestType, Dictionary<string, string> additionalParameters = null)
         {
+            if (!Connected)
+                throw new WebException(NOT_CONNECTED_MESSAGE);
+            
             StringBuilder sUrlBuilder = new StringBuilder();
             sUrlBuilder.Append("http://");
             sUrlBuilder.Append(ServerURL);
@@ -92,9 +130,9 @@ namespace SharpSub.Data
             sUrlBuilder.Append(requestType);
             sUrlBuilder.Append(".view");
             sUrlBuilder.Append("?u=");
-            sUrlBuilder.Append(CurrentUser.Username);
-            sUrlBuilder.Append("&p=");
-            sUrlBuilder.Append(CurrentUser.Password);
+            sUrlBuilder.Append(Username);
+            sUrlBuilder.Append("&p=enc:");
+            sUrlBuilder.Append(Password);
             
             if (additionalParameters != null)
             {
@@ -118,7 +156,8 @@ namespace SharpSub.Data
     }
 
     /// <summary>
-    /// Type of request to send to the server.
+    /// Type of request to send to the server. This is a list of APIs available
+    /// on the current build of Subsonic Server.
     /// </summary>
     public enum RequestType
     {
@@ -151,5 +190,4 @@ namespace SharpSub.Data
     }
 
     
-
 }
