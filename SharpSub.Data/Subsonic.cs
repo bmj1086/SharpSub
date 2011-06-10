@@ -32,7 +32,6 @@ namespace SharpSub.Data
             public Album(XmlElement xmlElement)
             {
                 ObjectElement = xmlElement;
-                Attributes = ObjectElement.Attributes;
             }
 
             public enum AlbumAttribute
@@ -102,14 +101,16 @@ namespace SharpSub.Data
                 }
             }
 
-            internal List<XmlAttribute> GetAttributes();
-        {
-            return ObjectElement.Attributes.Cast<XmlAttribute>().ToList();
-        }
+            internal List<XmlAttribute> GetAttributes()
+            {
+                return ObjectElement.Attributes.Cast<XmlAttribute>().ToList();
+            }
         }
 
         public class Response
         {
+            private const int NO_ERROR = -1;
+
             /* Example of a failed response
             <subsonic-response status="failed" version="1.5.0">
                 <error code="10" message="Required parameter is missing."/>
@@ -171,15 +172,12 @@ namespace SharpSub.Data
                 }
             }
 
-            public string GetErrorMessage(int errorCode = -1)
+            public string GetErrorMessage(int errorCode = NO_ERROR)
             {
-                if (errorCode == -1)
-                {
+                if (errorCode.Equals(NO_ERROR))
                     return ErrorAttribute.GetValue(GetError());
-                }
 
-                RestError error = (RestError)Enum.ToObject(typeof(RestError), errorCode);
-                return ErrorAttribute.GetValue(error);
+                return ErrorAttribute.GetValue((RestError)Enum.ToObject(typeof(RestError), errorCode));
             }
 
 

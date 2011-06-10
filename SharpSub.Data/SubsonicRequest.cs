@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Security.Authentication;
 using System.Text;
@@ -8,13 +9,13 @@ using System.Xml;
 
 namespace SharpSub.Data
 {
-    public static class SubsonicRequest
+    public class SubsonicRequest
     {
         public static bool Connected { get; private set; }
-        static public string ServerURL { get; private set;}
-        private static string Username { get; set; }
+        public static string ServerURL { get; private set; }
+        public static string Username { get; set; }
         private static string Password { get; set; }
-        private static readonly string NOT_CONNECTED_MESSAGE = "The server is not connected. Use the Login method first.";
+        private const string NOT_CONNECTED_MESSAGE = "The server is not connected. Use the Login method first.";
         private static readonly List<int> AllowedBitrates = new List<int>() {0, 32, 40, 48, 56, 64, 80, 96, 112, 128, 160, 192, 224, 256, 320};
 
         /// <summary>
@@ -29,10 +30,11 @@ namespace SharpSub.Data
         {
             ServerURL = serverURL;
             Username = username; 
-            Password = encodePassword(password);
+            Password = EncodePassword(password);
             Connected = true;
 
-            Subsonic.Response response = Ping();
+            string requestURL = BuildRequestURL(RequestType.ping);
+            var response = SendRequest(requestURL);
 
             if (!response.Successful)
                 Logout();
@@ -41,7 +43,7 @@ namespace SharpSub.Data
 
         }
 
-        private static string encodePassword(string password)
+        private static string EncodePassword(string password)
         {
             byte[] binary = Encoding.UTF8.GetBytes(password);
             return BitConverter.ToString(binary).Replace("-", String.Empty);
@@ -58,6 +60,7 @@ namespace SharpSub.Data
         {
             if (!Connected)
                 throw new InvalidCredentialException(NOT_CONNECTED_MESSAGE);
+                
 
             if (String.IsNullOrEmpty(id))
                 throw new ArgumentNullException(id);
@@ -67,11 +70,11 @@ namespace SharpSub.Data
                     String.Format("This bitrate is not allowed. Allowed bitrates are {0}", 
                                   String.Join(", ", AllowedBitrates)));
 
-            var parameters = new Dictionary<string, string>()
-                                             {
-                                                 {"id", id},
-                                                 {"maxBitRate", maxBitRate.ToString()}
-                                             };
+            var parameters = new Dictionary<string, string>
+                                 {
+                                    {"id", id},
+                                    {"maxBitRate", maxBitRate.ToString()}
+                                 };
 
             string requestURL = BuildRequestURL(RequestType.stream, parameters);
             WebRequest request = WebRequest.Create(requestURL);
@@ -85,9 +88,20 @@ namespace SharpSub.Data
             return AllowedBitrates.Contains(maxBitRate);
         }
         
-        private static Subsonic.Response Ping()
+        public static IList<Subsonic.Artist> GetArtists()
         {
-            string requestURL = BuildRequestURL(RequestType.ping);
+            string requestURL = BuildRequestURL(RequestType.getIndexes);
+            var response = SendRequest(requestURL);
+
+            if (!response.Successful)
+                throw new Exception(String.Format("Error returned from Subsonic server : {0}", response.GetErrorMessage()));
+
+            var artistElements = response.ResponseXml.GetElementsByTagName("artist");
+            return (from XmlElement artistElement in artistElements select new Subsonic.Artist(artistElement)).ToList();
+        }
+
+        public static Subsonic.Response SendRequest(string requestURL)
+        {
             WebRequest theRequest = WebRequest.Create(requestURL);
             WebResponse response = theRequest.GetResponse();
             StreamReader sr = new StreamReader(response.GetResponseStream());
@@ -95,7 +109,6 @@ namespace SharpSub.Data
             XmlDocument responseXml = new XmlDocument();
             responseXml.LoadXml(xmlResultString);
             return new Subsonic.Response(responseXml);
-
         }
 
         /// <summary>
@@ -153,13 +166,14 @@ namespace SharpSub.Data
             return sUrlBuilder.ToString();
 
         }
+
     }
 
     /// <summary>
     /// Type of request to send to the server. This is a list of APIs available
     /// on the current build of Subsonic Server.
     /// </summary>
-    public enum RequestType
+    enum RequestType
     {
         ping,
         getLicense,

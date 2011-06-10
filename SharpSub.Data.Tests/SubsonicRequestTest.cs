@@ -81,6 +81,25 @@ namespace SharpSub.Data.Tests
             bool actual = response.Successful;
             Assert.AreEqual(expected, actual);
         }
-        
+
+
+        /// <summary>
+        ///A test for GetArtists
+        ///</summary>
+        [TestMethod()]
+        public void GetArtistsTest()
+        {
+            bool expected = true;
+            bool actual;
+
+            string serverURL = "bjones.subsonic.org";
+            string username = "Guest";
+            string password = "notbrett";
+            Subsonic.Response response = SubsonicRequest.Login(serverURL, username, password);
+
+            var artistsList = SubsonicRequest.GetArtists();
+            actual = artistsList.Count > 0;
+            Assert.AreEqual(expected, actual);
+        }
     }
 }
