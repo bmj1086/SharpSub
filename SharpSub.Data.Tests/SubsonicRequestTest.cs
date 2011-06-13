@@ -1,4 +1,5 @@
-﻿using SharpSub.Data;
+﻿using System.Linq;
+using SharpSub.Data;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
@@ -77,7 +78,7 @@ namespace SharpSub.Data.Tests
             string username = "Guest";
             string password = "notbrett";
             bool expected = true; 
-            Subsonic.Response response = SubsonicRequest.Login(serverURL, username, password);
+            SubsonicResponse response = SubsonicRequest.Login(serverURL, username, password);
             bool actual = response.Successful;
             Assert.AreEqual(expected, actual);
         }
@@ -87,11 +88,10 @@ namespace SharpSub.Data.Tests
         ///A test for GetArtists
         ///</summary>
         [TestMethod()]
-        public void GetArtistsTest()
+        public void GetAlbumsTest()
         {
             bool expected = true;
             bool actual;
-
             string serverURL = "bmjones.com:56565/music";
             string username = "Guest";
             string password = "notbrett";

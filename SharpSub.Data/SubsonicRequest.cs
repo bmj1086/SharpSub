@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -29,7 +30,7 @@ namespace SharpSub.Data
         /// <param name="username"></param>
         /// <param name="password">Raw password. This method will encode the password automatically</param>
         /// <returns></returns>
-        public static Subsonic.Response Login(string serverURL, string username, string password)
+        public static SubsonicResponse Login(string serverURL, string username, string password)
         {
             ServerURL = serverURL;
             Username = username; 
@@ -90,9 +91,9 @@ namespace SharpSub.Data
         {
             return AllowedBitrates.Contains(maxBitRate);
         }
-        
-        
-        public static Subsonic.Response SendRequest(string requestURL)
+
+
+        private static SubsonicResponse SendRequest(string requestURL)
         {
             WebRequest theRequest = WebRequest.Create(requestURL);
             WebResponse response = theRequest.GetResponse();
@@ -100,7 +101,7 @@ namespace SharpSub.Data
             var xmlResultString = sr.ReadToEnd();
             XmlDocument responseXml = new XmlDocument();
             responseXml.LoadXml(xmlResultString);
-            return new Subsonic.Response(responseXml);
+            return new SubsonicResponse(responseXml);
         }
 
         /// <summary>
@@ -151,15 +152,15 @@ namespace SharpSub.Data
             }
 
             sUrlBuilder.Append("&v=");
-            sUrlBuilder.Append(Subsonic.APIVersion);
+            sUrlBuilder.Append(ConfigurationManager.AppSettings["APIVersion"]);
             sUrlBuilder.Append("&c=");
-            sUrlBuilder.Append(Subsonic.AppName);
+            sUrlBuilder.Append(ConfigurationManager.AppSettings["AppName"]);
 
             return sUrlBuilder.ToString();
 
         }
 
-        public static IList<Subsonic.Artist> GetArtists()
+        public static IList<Artist> GetArtistList()
         {
             string requestURL = BuildRequestURL(RequestType.getIndexes);
             var response = SendRequest(requestURL);
@@ -168,10 +169,10 @@ namespace SharpSub.Data
                 throw new Exception(String.Format("Error returned from Subsonic server : {0}", response.GetErrorMessage()));
 
             var artistElements = response.ResponseXml.GetElementsByTagName(ArtistXMLTag);
-            return (from XmlElement artistElement in artistElements select new Subsonic.Artist(artistElement)).ToList();
+            return (from XmlElement artistElement in artistElements select new Artist(artistElement)).ToList();
         }
 
-        public static IList<Subsonic.Song> GetAlbumSongs(string albumId)
+        public static IList<Song> GetAlbumSongs(string albumId)
         {
             Dictionary<string, string> paramaters = new Dictionary<string, string>{{"id", albumId}};
             string url = BuildRequestURL(RequestType.getMusicDirectory, paramaters);
@@ -181,10 +182,10 @@ namespace SharpSub.Data
                 throw new Exception(String.Format("Error returned from Subsonic server : {0}", response.GetErrorMessage()));
 
             var songElements = response.ResponseXml.GetElementsByTagName(SongXMLTag);
-            return (from XmlElement songElement in songElements select new Subsonic.Song(songElement)).ToList();
+            return (from XmlElement songElement in songElements select new Song(songElement)).ToList();
         }
         
-        public static IList<Subsonic.Album> GetArtistAlbums(string artistId)
+        public static IList<Album> GetArtistAlbums(string artistId)
         {
             Dictionary<string, string> paramaters = new Dictionary<string, string> { { "id", artistId } };
             string url = BuildRequestURL(RequestType.getMusicDirectory, paramaters);
@@ -194,8 +195,10 @@ namespace SharpSub.Data
                 throw new Exception(String.Format("Error returned from Subsonic server : {0}", response.GetErrorMessage()));
 
             var albumElements = response.ResponseXml.GetElementsByTagName(AlbumXMLTag);
-            return (from XmlElement albumElement in albumElements select new Subsonic.Album(albumElement)).ToList();
+            return (from XmlElement albumElement in albumElements select new Album(albumElement)).ToList();
         }
+        
+
     }
 
     /// <summary>
