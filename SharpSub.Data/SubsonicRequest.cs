@@ -16,6 +16,9 @@ namespace SharpSub.Data
         public static string Username { get; set; }
         private static string Password { get; set; }
         private const string NOT_CONNECTED_MESSAGE = "The server is not connected. Use the Login method first.";
+        private const string SongXMLTag = "child";
+        private const string AlbumXMLTag = "child";
+        private const string ArtistXMLTag = "artist";
         private static readonly List<int> AllowedBitrates = new List<int>() {0, 32, 40, 48, 56, 64, 80, 96, 112, 128, 160, 192, 224, 256, 320};
 
         /// <summary>
@@ -88,18 +91,7 @@ namespace SharpSub.Data
             return AllowedBitrates.Contains(maxBitRate);
         }
         
-        public static IList<Subsonic.Artist> GetArtists()
-        {
-            string requestURL = BuildRequestURL(RequestType.getIndexes);
-            var response = SendRequest(requestURL);
-
-            if (!response.Successful)
-                throw new Exception(String.Format("Error returned from Subsonic server : {0}", response.GetErrorMessage()));
-
-            var artistElements = response.ResponseXml.GetElementsByTagName("artist");
-            return (from XmlElement artistElement in artistElements select new Subsonic.Artist(artistElement)).ToList();
-        }
-
+        
         public static Subsonic.Response SendRequest(string requestURL)
         {
             WebRequest theRequest = WebRequest.Create(requestURL);
@@ -167,6 +159,43 @@ namespace SharpSub.Data
 
         }
 
+        public static IList<Subsonic.Artist> GetArtists()
+        {
+            string requestURL = BuildRequestURL(RequestType.getIndexes);
+            var response = SendRequest(requestURL);
+
+            if (!response.Successful)
+                throw new Exception(String.Format("Error returned from Subsonic server : {0}", response.GetErrorMessage()));
+
+            var artistElements = response.ResponseXml.GetElementsByTagName(ArtistXMLTag);
+            return (from XmlElement artistElement in artistElements select new Subsonic.Artist(artistElement)).ToList();
+        }
+
+        public static IList<Subsonic.Song> GetAlbumSongs(string albumId)
+        {
+            Dictionary<string, string> paramaters = new Dictionary<string, string>{{"id", albumId}};
+            string url = BuildRequestURL(RequestType.getMusicDirectory, paramaters);
+            var response = SendRequest(url);
+            
+            if (!response.Successful)
+                throw new Exception(String.Format("Error returned from Subsonic server : {0}", response.GetErrorMessage()));
+
+            var songElements = response.ResponseXml.GetElementsByTagName(SongXMLTag);
+            return (from XmlElement songElement in songElements select new Subsonic.Song(songElement)).ToList();
+        }
+        
+        public static IList<Subsonic.Album> GetArtistAlbums(string artistId)
+        {
+            Dictionary<string, string> paramaters = new Dictionary<string, string> { { "id", artistId } };
+            string url = BuildRequestURL(RequestType.getMusicDirectory, paramaters);
+            var response = SendRequest(url);
+
+            if (!response.Successful)
+                throw new Exception(String.Format("Error returned from Subsonic server : {0}", response.GetErrorMessage()));
+
+            var albumElements = response.ResponseXml.GetElementsByTagName(AlbumXMLTag);
+            return (from XmlElement albumElement in albumElements select new Subsonic.Album(albumElement)).ToList();
+        }
     }
 
     /// <summary>

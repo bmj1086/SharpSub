@@ -43,7 +43,7 @@ namespace SharpSub.Data
             {
                 return base.GetAttribute(attribute.ToString());
             }
-            
+
         }
 
         public class Song : SubsonicItem
@@ -81,7 +81,7 @@ namespace SharpSub.Data
             {
                 id, name
             }
-            
+
         }
         #endregion
 

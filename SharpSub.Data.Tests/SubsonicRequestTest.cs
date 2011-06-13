@@ -92,13 +92,34 @@ namespace SharpSub.Data.Tests
             bool expected = true;
             bool actual;
 
-            string serverURL = "bjones.subsonic.org";
+            string serverURL = "bmjones.com:56565/music";
             string username = "Guest";
             string password = "notbrett";
-            Subsonic.Response response = SubsonicRequest.Login(serverURL, username, password);
+            SubsonicRequest.Login(serverURL, username, password);
 
-            var artistsList = SubsonicRequest.GetArtists();
-            actual = artistsList.Count > 0;
+            string albumId = "533a5c4d757369635c4161726f6e2047696c6c65737069655c416e7468656d20536f6e6720283230313129";
+            var albumSongs = SubsonicRequest.GetAlbumSongs(albumId);
+            actual = albumSongs.Count > 0;
+            Assert.AreEqual(expected, actual);
+        }
+
+        /// <summary>
+        ///A test for GetArtistAlbums
+        ///</summary>
+        [TestMethod()]
+        public void GetArtistAlbumsTest()
+        {
+            bool expected = true;
+            bool actual;
+
+            string serverURL = "bmjones.com:56565/music";
+            string username = "Guest";
+            string password = "notbrett";
+            SubsonicRequest.Login(serverURL, username, password);
+
+            string artistId = "533a5c4d757369635c436f70656c616e64";
+            var artistAlbums = SubsonicRequest.GetArtistAlbums(artistId);
+            actual = artistAlbums.Count > 0;
             Assert.AreEqual(expected, actual);
         }
     }
