@@ -15,6 +15,7 @@ namespace SharpSub.Data
         public SubsonicResponse(XmlDocument responseXml)
         {
             ResponseXml = responseXml;
+            
         }
 
         /// <summary>
@@ -55,12 +56,11 @@ namespace SharpSub.Data
             }
         }
 
-        public RestError? GetError()
+        public int? GetErrorCode()
         {
             try
             {
-                RestError error = (RestError)Enum.ToObject(typeof(RestError), Int32.Parse(ResponseXml.GetElementsByTagName("error")[0].Attributes["code"].Value));
-                return error;
+                return Int32.Parse(ResponseXml.GetElementsByTagName("error")[0].Attributes["code"].InnerText);
             }
             catch
             {
@@ -70,10 +70,15 @@ namespace SharpSub.Data
 
         public string GetErrorMessage(int errorCode = NO_ERROR)
         {
-            if (errorCode.Equals(NO_ERROR))
-                return ErrorAttribute.GetValue(GetError());
-
-            return ErrorAttribute.GetValue((RestError)Enum.ToObject(typeof(RestError), errorCode));
+            try
+            {
+                return ResponseXml.GetElementsByTagName("error")[0].Attributes["message"].InnerText;
+            }
+            catch
+            {
+                return null;
+            }
+            
         }
 
 

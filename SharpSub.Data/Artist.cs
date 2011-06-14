@@ -4,10 +4,6 @@ namespace SharpSub.Data
 {
     public class Artist
     {
-        public readonly XmlElement _itemElement;
-        public string ID { get; protected set; }
-        public string Name { get; protected set; }
-
         public Artist(XmlElement itemElement)
         {
             _itemElement = itemElement;
@@ -18,7 +14,14 @@ namespace SharpSub.Data
 
         public string GetAttribute(Attribute attribute)
         {
-            return _itemElement.Attributes[attribute.ToString()].InnerText;
+            try
+            {
+                return _itemElement.Attributes[attribute.ToString()].InnerText;
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         public enum Attribute
@@ -31,5 +34,10 @@ namespace SharpSub.Data
             return Name;
         }
 
+        public readonly XmlElement _itemElement;
+        public string ID { get; protected set; }
+        public string Name { get; protected set; }
+
+        
     }
 }

@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Windows.Forms;
 using SharpSub.Data;
 
@@ -12,8 +13,7 @@ namespace SharpSub.UI.Demo
 {
     public partial class Form1 : Form
     {
-        private IList<Artist> _artists { get; set; }
-
+        private Queue<Delegate> todo = new Queue<Delegate>();
         public Form1()
         {
             InitializeComponent();
@@ -30,15 +30,30 @@ namespace SharpSub.UI.Demo
 
         private void artistListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var artist = (Artist) artistListBox.SelectedItem;
-            albumsListBox.DataSource = SubsonicRequest.GetArtistAlbums(artist.ID);
+            var artist = (Artist)artistListBox.SelectedItem;
+            ThreadPool.QueueUserWorkItem((ShowAlbums), artist);
         }
 
         private void albumsListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var album = (Album) albumsListBox.SelectedItem;
-            var songsList = SubsonicRequest.GetAlbumSongs(album.ID);
-            songsDataGridView.DataSource = songsList;
+            var album = (Album)albumsListBox.SelectedItem;
+            ThreadPool.QueueUserWorkItem((ShowSongs), album);
         }
+
+        private void ShowSongs(object album)
+        {
+            IList<Song> songsList = SubsonicRequest.GetAlbumSongs((album as Album).ID);
+            if (InvokeRequired)
+                Invoke(new MethodInvoker(delegate { songsDataGridView.DataSource = songsList; }));
+        }
+
+        private void ShowAlbums(object artist)
+        {
+            IList<Album> albumList = SubsonicRequest.GetArtistAlbums((artist as Artist).ID);
+            if (InvokeRequired)
+                Invoke(new MethodInvoker(delegate { albumsListBox.DataSource = albumList; }));
+        }
+
+
     }
 }

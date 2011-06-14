@@ -60,14 +60,11 @@ namespace SharpSub.Data
         /// <param name="maxBitRate">If specified, the server will attempt to limit the bitrate to this value, in kilobits per second. If set to zero, no limit is imposed. Legal values are: 0, 32, 40, 48, 56, 64, 80, 96, 112, 128, 160, 192, 224, 256 and 320.</param>
         /// <exception cref="WebException">Thrown when the user is not logged in. This should be caught by the UI thread.</exception>
         /// <returns>MP3 Stream</returns>
-        public static Stream GetSongStream(string id, int maxBitRate = 0)
+        public static Stream GetSongStream(Song song, int maxBitRate = 0)
         {
             if (!Connected)
                 throw new InvalidCredentialException(NOT_CONNECTED_MESSAGE);
                 
-
-            if (String.IsNullOrEmpty(id))
-                throw new ArgumentNullException(id);
 
             if (!SupportedBitRate(maxBitRate))
                 throw new ArgumentOutOfRangeException(
@@ -76,7 +73,7 @@ namespace SharpSub.Data
 
             var parameters = new Dictionary<string, string>
                                  {
-                                    {"id", id},
+                                    {"id", song.ID},
                                     {"maxBitRate", maxBitRate.ToString()}
                                  };
 
@@ -179,7 +176,7 @@ namespace SharpSub.Data
             var response = SendRequest(url);
             
             if (!response.Successful)
-                throw new Exception(String.Format("Error returned from Subsonic server : {0}", response.GetErrorMessage()));
+                throw new Exception(String.Format("Error returned from Subsonic server: {0}", response.GetErrorMessage()));
 
             var songElements = response.ResponseXml.GetElementsByTagName(SongXMLTag);
             return (from XmlElement songElement in songElements select new Song(songElement)).ToList();
@@ -192,7 +189,7 @@ namespace SharpSub.Data
             var response = SendRequest(url);
 
             if (!response.Successful)
-                throw new Exception(String.Format("Error returned from Subsonic server : {0}", response.GetErrorMessage()));
+                throw new Exception(String.Format("Error returned from Subsonic server :{0}", response.GetErrorMessage()));
 
             var albumElements = response.ResponseXml.GetElementsByTagName(AlbumXMLTag);
             return (from XmlElement albumElement in albumElements select new Album(albumElement)).ToList();

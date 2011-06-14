@@ -1,18 +1,10 @@
-﻿using System.Xml;
+﻿using System;
+using System.Xml;
 
 namespace SharpSub.Data
 {
     public class Album
     {
-        public readonly XmlElement _itemElement;
-
-        public string ID { get; protected set; }
-        public string Parent { get; protected set; }
-        public string Title { get; protected set; }
-        public string IsDir { get; protected set; }
-        public string CoverArt { get; protected set; }
-        public string Artist { get; protected set; }
-
         public Album(XmlElement itemElement)
         {
             _itemElement = itemElement;
@@ -20,14 +12,21 @@ namespace SharpSub.Data
             ID = GetAttribute(Attribute.id);
             Parent = GetAttribute(Attribute.parent);
             Title = GetAttribute(Attribute.title);
-            IsDir = GetAttribute(Attribute.isDir);
+            IsDir = Convert.ToBoolean(GetAttribute(Attribute.isDir));
             CoverArt = GetAttribute(Attribute.coverArt);
             Artist = GetAttribute(Attribute.artist);
         }
 
         public string GetAttribute(Attribute attribute)
         {
-            return _itemElement.Attributes[attribute.ToString()].InnerText;
+            try
+            {
+                return _itemElement.Attributes[attribute.ToString()].InnerText;
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         public enum Attribute
@@ -41,5 +40,15 @@ namespace SharpSub.Data
         {
             return Title;
         }
+
+        public readonly XmlElement _itemElement;
+        public string ID { get; protected set; }
+        public string Parent { get; protected set; }
+        public string Title { get; protected set; }
+        public bool? IsDir { get; protected set; }
+        public string CoverArt { get; protected set; }
+        public string Artist { get; protected set; }
+
+        
     }
 }
