@@ -12,7 +12,7 @@ namespace SharpSub.Data
             Name = GetAttribute(Attribute.name);
         }
 
-        public string GetAttribute(Attribute attribute)
+        private string GetAttribute(Attribute attribute)
         {
             try
             {
@@ -24,7 +24,7 @@ namespace SharpSub.Data
             }
         }
 
-        public enum Attribute
+        private enum Attribute
         {
             id, name
         }

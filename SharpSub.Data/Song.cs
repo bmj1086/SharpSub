@@ -30,7 +30,7 @@ namespace SharpSub.Data
             Path = GetAttribute(Attribute.path);
         }
 
-        public string GetAttribute(Attribute attribute)
+        private string GetAttribute(Attribute attribute)
         {
             try
             {
@@ -42,7 +42,7 @@ namespace SharpSub.Data
             }
         }
 
-        public enum Attribute
+        private enum Attribute
         {
             id, parent, title, isDir, album, artist, duration, bitRate, track,
             year, genre, size, suffix, contentType, isVideo, coverArt, path
