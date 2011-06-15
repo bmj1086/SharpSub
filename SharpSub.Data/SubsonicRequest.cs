@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -194,8 +195,21 @@ namespace SharpSub.Data
             var albumElements = response.ResponseXml.GetElementsByTagName(AlbumXMLTag);
             return (from XmlElement albumElement in albumElements select new Album(albumElement)).ToList();
         }
-        
 
+
+
+        internal static Bitmap GetAlbumArt(Album album, int? size = null)
+        {
+            var param = new Dictionary<string, string> { {"id", album.ID} };
+            
+            if (size != null)
+                param.Add("size", size.ToString());
+
+            string requestURL = BuildRequestURL(RequestType.getCoverArt, param);
+            WebRequest theRequest = WebRequest.Create(requestURL);
+            WebResponse response = theRequest.GetResponse();
+            return new Bitmap(response.GetResponseStream());
+        }
     }
 
     /// <summary>

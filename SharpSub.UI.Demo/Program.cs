@@ -15,7 +15,7 @@ namespace SharpSub.UI.Demo
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new SampleForm());
+            Application.Run(new Form1());
         }
     }
 }

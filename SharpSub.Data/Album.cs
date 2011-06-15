@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Xml;
 
 namespace SharpSub.Data
@@ -13,7 +14,6 @@ namespace SharpSub.Data
             Parent = GetAttribute(Attribute.parent);
             Title = GetAttribute(Attribute.title);
             IsDir = Convert.ToBoolean(GetAttribute(Attribute.isDir));
-            CoverArt = GetAttribute(Attribute.coverArt);
             Artist = GetAttribute(Attribute.artist);
         }
 
@@ -46,9 +46,12 @@ namespace SharpSub.Data
         public string Parent { get; protected set; }
         public string Title { get; protected set; }
         public bool? IsDir { get; protected set; }
-        public string CoverArt { get; protected set; }
         public string Artist { get; protected set; }
 
+        public Bitmap CoverArt
+        {
+            get { return SubsonicRequest.GetAlbumArt(this); }
+        }
         
     }
 }
