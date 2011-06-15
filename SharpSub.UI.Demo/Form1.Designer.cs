@@ -54,14 +54,15 @@
             // 
             // songsDataGridView
             // 
-            this.songsDataGridView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.songsDataGridView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.songsDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.songsDataGridView.Location = new System.Drawing.Point(12, 217);
             this.songsDataGridView.Name = "songsDataGridView";
             this.songsDataGridView.Size = new System.Drawing.Size(381, 209);
             this.songsDataGridView.TabIndex = 2;
+            this.songsDataGridView.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.songsDataGridView_CellDoubleClick);
             // 
             // Form1
             // 

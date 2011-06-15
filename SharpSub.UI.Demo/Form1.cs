@@ -54,6 +54,13 @@ namespace SharpSub.UI.Demo
                 Invoke(new MethodInvoker(delegate { albumsListBox.DataSource = albumList; }));
         }
 
+        private void songsDataGridView_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            var songList = (IList<Song>)songsDataGridView.DataSource;
+            Song song = songList.ElementAt(songsDataGridView.SelectedCells[0].RowIndex);
+            //TODO: Play song
+        }
+
 
     }
 }
