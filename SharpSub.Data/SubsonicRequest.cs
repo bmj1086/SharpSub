@@ -24,8 +24,8 @@ namespace SharpSub.Data
         private const string API_VERSION = "1.5.0";
         private const string APP_NAME = "SharpSub";
 
-        private static readonly List<int> AllowedBitrates = new List<int>() 
-        {0, 32, 40, 48, 56, 64, 80, 96, 112, 128, 160, 192, 224, 256, 320};
+        private static readonly List<int> AllowedBitrates = new List<int> 
+            {0, 32, 40, 48, 56, 64, 80, 96, 112, 128, 160, 192, 224, 256, 320};
 
         /// <summary>
         /// If successful, sets the Connected property to true and allows
