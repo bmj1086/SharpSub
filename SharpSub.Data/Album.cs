@@ -48,9 +48,9 @@ namespace SharpSub.Data
         public bool? IsDir { get; protected set; }
         public string Artist { get; protected set; }
 
-        public Bitmap CoverArt
+        public Bitmap CoverArt(int? size = null)
         {
-            get { return SubsonicRequest.GetAlbumArt(this); }
+            return SubsonicRequest.GetAlbumArt(this, size);
         }
         
     }
