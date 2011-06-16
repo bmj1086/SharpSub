@@ -21,7 +21,11 @@ namespace SharpSub.Data
         private const string SongXMLTag = "child";
         private const string AlbumXMLTag = "child";
         private const string ArtistXMLTag = "artist";
-        private static readonly List<int> AllowedBitrates = new List<int>() {0, 32, 40, 48, 56, 64, 80, 96, 112, 128, 160, 192, 224, 256, 320};
+        private const string API_VERSION = "1.5.0";
+        private const string APP_NAME = "SharpSub";
+
+        private static readonly List<int> AllowedBitrates = new List<int>() 
+        {0, 32, 40, 48, 56, 64, 80, 96, 112, 128, 160, 192, 224, 256, 320};
 
         /// <summary>
         /// If successful, sets the Connected property to true and allows
@@ -58,6 +62,7 @@ namespace SharpSub.Data
         /// Gets the stream for the specified song
         /// </summary>
         /// <param name="id">A string which uniquely identifies the file to stream. Obtained by calls to getMusicDirectory.</param>
+        /// <param name="song"></param>
         /// <param name="maxBitRate">If specified, the server will attempt to limit the bitrate to this value, in kilobits per second. If set to zero, no limit is imposed. Legal values are: 0, 32, 40, 48, 56, 64, 80, 96, 112, 128, 160, 192, 224, 256 and 320.</param>
         /// <exception cref="WebException">Thrown when the user is not logged in. This should be caught by the UI thread.</exception>
         /// <returns>MP3 Stream</returns>
@@ -150,9 +155,9 @@ namespace SharpSub.Data
             }
 
             sUrlBuilder.Append("&v=");
-            sUrlBuilder.Append(ConfigurationManager.AppSettings["APIVersion"]);
+            sUrlBuilder.Append(API_VERSION);
             sUrlBuilder.Append("&c=");
-            sUrlBuilder.Append(ConfigurationManager.AppSettings["AppName"]);
+            sUrlBuilder.Append(APP_NAME);
 
             return sUrlBuilder.ToString();
 
