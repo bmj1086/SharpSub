@@ -14,41 +14,36 @@ namespace SharpSub.Data
 {
     class MP3 : IDisposable
     {
+        private WaveOut _waveOut;
+        private WaveStream _waveStream;
+        private Stream _memoryStream;
+        public bool Playing;
+        public string playingName;
+
         public MP3(Song song)
         {
-            using (Stream ms = new MemoryStream())
+            _memoryStream = new MemoryStream();
+
+            using (Stream stream = SubsonicRequest.GetSongStream(song))
             {
-                using (Stream stream = SubsonicRequest.GetSongStream(song))
+                byte[] buffer = new byte[32768];
+                int read;
+                while ((read = stream.Read(buffer, 0, buffer.Length)) > 0)
                 {
-                    byte[] buffer = new byte[32768];
-                    int read;
-                    while ((read = stream.Read(buffer, 0, buffer.Length)) > 0)
-                    {
-                        ms.Write(buffer, 0, read);
-                    }
-                }
-                ms.Position = 0;
-
-                using (WaveStream stream = new ManagedMp3Stream(ms))
-
-                //using (WaveStream blockAlignedStream =
-                //    new BlockAlignReductionStream(
-                //        WaveFormatConversionStream.CreatePcmStream(
-                //            new Mp3FileReader(ms))))
-                {
-                    using (WaveOut waveOut = new WaveOut(WaveCallbackInfo.FunctionCallback()))
-                    {
-                        waveOut.Init(stream);
-                        waveOut.Play();
-                        while (waveOut.PlaybackState == PlaybackState.Playing)
-                        {
-                            System.Threading.Thread.Sleep(100);
-                        }
-                    }
+                    _memoryStream.Write(buffer, 0, read);
                 }
             }
-        }
+            _memoryStream.Position = 0;
 
+            _waveStream = new Mp3FileReader(_memoryStream);
+            _waveOut = new WaveOut(WaveCallbackInfo.FunctionCallback());
+            _waveOut.Init(_waveStream);
+            _waveOut.Play();
+            Playing = true;
+            
+
+        }
+        
         public void Play()
         {
 
@@ -56,17 +51,32 @@ namespace SharpSub.Data
 
         public void Stop()
         {
-
+            _waveOut.Stop();
             Dispose();
         }
 
         public void Pause()
         {
-
+            _waveOut.Pause();
         }
+
+        public void Resume()
+        {
+            _waveOut.Resume();
+        }
+
+        public float Volume
+        {
+            get { return _waveOut.Volume; }
+            set { _waveOut.Volume = value; }
+        }
+
+        
 
         public void Dispose()
         {
+            _waveOut.Dispose();
+            
             //TODO: Dispose of the player and other objects that encode/decode the stream, etc.
         }
     }

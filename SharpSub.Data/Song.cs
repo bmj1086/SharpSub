@@ -6,7 +6,7 @@ namespace SharpSub.Data
     public class Song
     {
         private readonly XmlElement _itemElement;
-
+        
         public Song(XmlElement itemElement)
         {
             _itemElement = itemElement;
