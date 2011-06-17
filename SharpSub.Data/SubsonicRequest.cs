@@ -188,9 +188,9 @@ namespace SharpSub.Data
             return (from XmlElement songElement in songElements select new Song(songElement)).ToList();
         }
         
-        public static IList<Album> GetArtistAlbums(string artistId)
+        public static IList<Album> GetArtistAlbums(Artist artist)
         {
-            Dictionary<string, string> paramaters = new Dictionary<string, string> { { "id", artistId } };
+            Dictionary<string, string> paramaters = new Dictionary<string, string> { { "id", artist.ID } };
             string url = BuildRequestURL(RequestType.getMusicDirectory, paramaters);
             var response = SendRequest(url);
 
@@ -205,7 +205,7 @@ namespace SharpSub.Data
 
         internal static Bitmap GetAlbumArt(Album album, int? size = null)
         {
-            var param = new Dictionary<string, string> { {"id", album.GetAttribute(Album.Attribute.coverArt)} };
+            var param = new Dictionary<string, string> { {"id", album.CoverArtID} };
             
             if (size != null)
                 param.Add("size", size.ToString());

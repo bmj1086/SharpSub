@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.IO;
+using System.Linq;
 using SharpSub.Data;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
@@ -118,8 +119,8 @@ namespace SharpSub.Data.Tests
             string password = "notbrett";
             SubsonicRequest.Login(serverURL, username, password);
 
-            string artistId = "533a5c4d757369635c436f70656c616e64";
-            var artistAlbums = SubsonicRequest.GetArtistAlbums(artistId);
+            Artist artist = SubsonicRequest.GetArtistList().First();
+            var artistAlbums = SubsonicRequest.GetArtistAlbums(artist);
             actual = artistAlbums.Count > 0;
             Assert.AreEqual(expected, actual);
         }
@@ -135,12 +136,14 @@ namespace SharpSub.Data.Tests
             string password = "notbrett";
             SubsonicRequest.Login(serverURL, username, password);
 
-            Artist artist = SubsonicRequest.GetArtistList().First();
-            Album album = SubsonicRequest.GetArtistAlbums(artist.ID).First();
-            bool expected = true; // TODO: Initialize to an appropriate value
+            Artist artist = SubsonicRequest.GetArtistList()[10];
+            Album album = SubsonicRequest.GetArtistAlbums(artist).First();
+            bool expected = true; //TODO: Initialize to an appropriate value
             Bitmap coverArt = SubsonicRequest.GetAlbumArt(album);
+            //coverArt.Save("C:/tmp.bmp");
             bool actual = coverArt != null;
             Assert.AreEqual(expected, actual);
         }
+
     }
 }

@@ -79,7 +79,7 @@ namespace SharpSub.Data.Tests
             SubsonicRequest.Login(serverURL, username, password);
 
             Artist artist = SubsonicRequest.GetArtistList()[17];
-            Album album = SubsonicRequest.GetArtistAlbums(artist.ID).First();
+            Album album = SubsonicRequest.GetArtistAlbums(artist).First();
             Song song = SubsonicRequest.GetAlbumSongs(album.ID).First();
 
             MP3 mp3 = new MP3(song);

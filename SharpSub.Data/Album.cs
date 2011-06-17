@@ -11,6 +11,7 @@ namespace SharpSub.Data
             _itemElement = itemElement;
 
             ID = GetAttribute(Attribute.id);
+            CoverArtID = GetAttribute(Attribute.coverArt);
             Parent = GetAttribute(Attribute.parent);
             Title = GetAttribute(Attribute.title);
             IsDir = Convert.ToBoolean(GetAttribute(Attribute.isDir));
@@ -47,6 +48,7 @@ namespace SharpSub.Data
         public string Title { get; protected set; }
         public bool? IsDir { get; protected set; }
         public string Artist { get; protected set; }
+        public string CoverArtID { get; protected set; }
 
         public Bitmap CoverArt(int? size = null)
         {
