@@ -205,7 +205,7 @@ namespace SharpSub.Data
 
         internal static Bitmap GetAlbumArt(Album album, int? size = null)
         {
-            var param = new Dictionary<string, string> { {"id", album.ID} };
+            var param = new Dictionary<string, string> { {"id", album.GetAttribute(Album.Attribute.coverArt)} };
             
             if (size != null)
                 param.Add("size", size.ToString());
@@ -220,7 +220,7 @@ namespace SharpSub.Data
             catch (Exception ex)
             {
                 //TODO: Write to logger
-                return new Bitmap(SharpSub.Data.Properties.Resources.no_cover_art);
+                return new Bitmap(Properties.Resources.no_cover_art);
             }
             
         }
