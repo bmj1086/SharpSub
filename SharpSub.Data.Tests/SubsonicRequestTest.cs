@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Web;
 using System.Diagnostics;
+using System.Drawing;
 
 namespace SharpSub.Data.Tests
 {
@@ -120,6 +121,25 @@ namespace SharpSub.Data.Tests
             string artistId = "533a5c4d757369635c436f70656c616e64";
             var artistAlbums = SubsonicRequest.GetArtistAlbums(artistId);
             actual = artistAlbums.Count > 0;
+            Assert.AreEqual(expected, actual);
+        }
+
+        /// <summary>
+        ///A test for GetAlbumArt
+        ///</summary>
+        [TestMethod()]
+        public void GetAlbumArtTest()
+        {
+            string serverURL = "bmjones.com:56565/music";
+            string username = "Guest";
+            string password = "notbrett";
+            SubsonicRequest.Login(serverURL, username, password);
+
+            Artist artist = SubsonicRequest.GetArtistList().First();
+            Album album = SubsonicRequest.GetArtistAlbums(artist.ID).First();
+            bool expected = true; // TODO: Initialize to an appropriate value
+            Bitmap coverArt = SubsonicRequest.GetAlbumArt(album);
+            bool actual = coverArt != null;
             Assert.AreEqual(expected, actual);
         }
     }

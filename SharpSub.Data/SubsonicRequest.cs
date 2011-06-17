@@ -210,10 +210,19 @@ namespace SharpSub.Data
             if (size != null)
                 param.Add("size", size.ToString());
 
-            string requestURL = BuildRequestURL(RequestType.getCoverArt, param);
-            WebRequest theRequest = WebRequest.Create(requestURL);
-            WebResponse response = theRequest.GetResponse();
-            return new Bitmap(response.GetResponseStream());
+            try
+            {
+                string requestURL = BuildRequestURL(RequestType.getCoverArt, param);
+                WebRequest theRequest = WebRequest.Create(requestURL);
+                WebResponse response = theRequest.GetResponse();
+                return new Bitmap(response.GetResponseStream());
+            }
+            catch (Exception ex)
+            {
+                //TODO: Write to logger
+                return new Bitmap(SharpSub.Data.Properties.Resources.no_cover_art);
+            }
+            
         }
     }
 
