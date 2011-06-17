@@ -8,7 +8,6 @@ using System.Text;
 using System.Xml;
 using NAudio.CoreAudioApi;
 using NAudio.Wave;
-using TestApp;
 
 namespace SharpSub.Data
 {
@@ -17,7 +16,7 @@ namespace SharpSub.Data
         private WaveOut _waveOut;
         private WaveStream _waveStream;
         private Stream _memoryStream;
-        public bool Playing;
+        public PlaybackState PlaybackState { get { return _waveOut.PlaybackState; } }
         public string playingName;
 
         public MP3(Song song)
@@ -39,7 +38,6 @@ namespace SharpSub.Data
             _waveOut = new WaveOut(WaveCallbackInfo.FunctionCallback());
             _waveOut.Init(_waveStream);
             _waveOut.Play();
-            Playing = true;
             
 
         }
