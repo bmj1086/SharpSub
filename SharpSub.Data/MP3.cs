@@ -18,12 +18,14 @@ namespace SharpSub.Data
         private Stream _memoryStream;
         public PlaybackState PlaybackState { get { return _waveOut.PlaybackState; } }
         public string playingName;
+        public Song CurrentSong { get; protected set; }
 
         public MP3(Song song)
         {
+            CurrentSong = song;
             _memoryStream = new MemoryStream();
 
-            using (Stream stream = SubsonicRequest.GetSongStream(song))
+            using (Stream stream = SubsonicRequest.GetSongStream(CurrentSong))
             {
                 byte[] buffer = new byte[32768];
                 int read;
@@ -37,14 +39,15 @@ namespace SharpSub.Data
             _waveStream = new Mp3FileReader(_memoryStream);
             _waveOut = new WaveOut(WaveCallbackInfo.FunctionCallback());
             _waveOut.Init(_waveStream);
-            _waveOut.Play();
-            
-
         }
         
         public void Play()
         {
-
+            Debug.WriteLine(Volume);
+            Debug.WriteLine("Artist: {0}. Song: {1}.", CurrentSong.Artist, CurrentSong.Title);
+            
+            if (this.PlaybackState == PlaybackState.Stopped)
+                _waveOut.Play();
         }
 
         public void Stop()

@@ -14,12 +14,10 @@ namespace SharpSub.Data.Tests
     ///to contain all MP3Test Unit Tests
     ///</summary>
     [TestClass()]
+    //[Ignore]
     public class MP3Test
     {
-
-
         private TestContext testContextInstance;
-
         /// <summary>
         ///Gets or sets the test context which provides
         ///information about and functionality for the current test run.
@@ -77,18 +75,18 @@ namespace SharpSub.Data.Tests
             string username = "Guest";
             string password = "notbrett";
             SubsonicRequest.Login(serverURL, username, password);
+            Random random = new Random();
 
-            Artist artist = SubsonicRequest.GetArtistList()[17];
+            var artistList = SubsonicRequest.GetArtistList();
+            var artist = artistList[random.Next(artistList.Count)];
+
             Album album = SubsonicRequest.GetArtistAlbums(artist).First();
             Song song = SubsonicRequest.GetAlbumSongs(album.ID).First();
 
             MP3 mp3 = new MP3(song);
-            Debug.WriteLine(mp3.Volume);
-            DateTime tostop = DateTime.Now.AddSeconds(15);
-            while (DateTime.Now < tostop)
-            {
-                
-            }
+            mp3.Play();
+            DateTime tostop = DateTime.Now.AddSeconds(10);
+            while (DateTime.Now < tostop){}
             mp3.Stop();
             Debug.WriteLine("Stopped playback...");
         }

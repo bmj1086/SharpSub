@@ -140,7 +140,7 @@ namespace SharpSub.Data.Tests
             Album album = SubsonicRequest.GetArtistAlbums(artist).First();
             bool expected = true; //TODO: Initialize to an appropriate value
             Bitmap coverArt = SubsonicRequest.GetAlbumArt(album);
-            //coverArt.Save("C:/tmp.bmp");
+            coverArt.Save("C:/tmp.bmp");
             bool actual = coverArt != null;
             Assert.AreEqual(expected, actual);
         }
