@@ -84,11 +84,11 @@ namespace SharpSub.Data.Tests
             Album album = SubsonicRequest.GetArtistAlbums(artist).First();
             Song song = SubsonicRequest.GetAlbumSongs(album.ID).First();
 
-            MP3 mp3 = new MP3(song);
-            mp3.Play();
+            Mp3Player player = new Mp3Player(song);
+            player.Play();
             DateTime tostop = DateTime.Now.AddSeconds(10);
             while (DateTime.Now < tostop){}
-            mp3.Stop();
+            player.Stop();
             Debug.WriteLine("Stopped playback...");
         }
 

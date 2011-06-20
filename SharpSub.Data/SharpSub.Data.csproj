@@ -64,10 +64,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Album.cs" />
-    <Compile Include="AmazonRequest.cs" />
     <Compile Include="Artist.cs" />
     <Compile Include="CurrentPlaylist.cs" />
-    <Compile Include="MP3.cs" />
+    <Compile Include="LastFm.cs" />
+    <Compile Include="Mp3Player.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

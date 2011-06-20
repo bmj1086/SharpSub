@@ -11,16 +11,16 @@ using NAudio.Wave;
 
 namespace SharpSub.Data
 {
-    class MP3 : IDisposable
+    class Mp3Player : IDisposable
     {
         private WaveOut _waveOut;
         private WaveStream _waveStream;
         private Stream _memoryStream;
         public PlaybackState PlaybackState { get { return _waveOut.PlaybackState; } }
         public string playingName;
-        public Song CurrentSong { get; protected set; }
+        public readonly Song CurrentSong;
 
-        public MP3(Song song)
+        public Mp3Player(Song song)
         {
             CurrentSong = song;
             _memoryStream = new MemoryStream();
@@ -41,11 +41,11 @@ namespace SharpSub.Data
             _waveOut.Init(_waveStream);
         }
         
+        /// <summary>
+        /// Only use this method to start playing the song. For unpausing use Resume()
+        /// </summary>
         public void Play()
         {
-            Debug.WriteLine(Volume);
-            Debug.WriteLine("Artist: {0}. Song: {1}.", CurrentSong.Artist, CurrentSong.Title);
-            
             if (this.PlaybackState == PlaybackState.Stopped)
                 _waveOut.Play();
         }

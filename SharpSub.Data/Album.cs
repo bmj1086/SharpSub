@@ -48,7 +48,7 @@ namespace SharpSub.Data
         public string Title { get; protected set; }
         public bool? IsDir { get; protected set; }
         public string Artist { get; protected set; }
-        public string CoverArtID { get; protected set; }
+        internal string CoverArtID { get; set; }
 
         public Bitmap CoverArt(int? size = null)
         {
