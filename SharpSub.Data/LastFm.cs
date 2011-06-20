@@ -6,12 +6,15 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Xml;
-using System.Xml.Linq;
+using System.Configuration;
 
 namespace SharpSub.Data
 {
     public class LastFm
     {
+        internal static readonly string API_KEY = ConfigurationManager.AppSettings["lastfm_api_key"];
+        internal static readonly string SECRET_KEY = ConfigurationManager.AppSettings["lastfm_secret_key"];
+
         public ArtistInfo GetArtistInfo(Artist artist)
         {
             /*
@@ -23,7 +26,7 @@ namespace SharpSub.Data
              * username (Optional) : The username for the context of the request. If supplied, the user's playcount for this artist is included in the response.
              * api_key (Required) : A Last.fm API key.
              */
-
+            
             return null;
         }
 
