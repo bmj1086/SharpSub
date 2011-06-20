@@ -64,6 +64,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Album.cs" />
+    <Compile Include="AmazonRequest.cs" />
     <Compile Include="Artist.cs" />
     <Compile Include="CurrentPlaylist.cs" />
     <Compile Include="MP3.cs" />

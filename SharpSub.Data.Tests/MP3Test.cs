@@ -76,10 +76,10 @@ namespace SharpSub.Data.Tests
             string password = "notbrett";
             SubsonicRequest.Login(serverURL, username, password);
             
-            Random random = new Random();
-            var artistList = SubsonicRequest.GetArtistList();
-            var artist = artistList[random.Next(artistList.Count)];
-            //var artist = SubsonicRequest.GetArtistList().First();
+            //Random random = new Random();
+            //var artistList = SubsonicRequest.GetArtistList();
+            //var artist = artistList[random.Next(artistList.Count)];
+            var artist = SubsonicRequest.GetArtistList().First();
 
             Album album = SubsonicRequest.GetArtistAlbums(artist).First();
             Song song = SubsonicRequest.GetAlbumSongs(album.ID).First();
