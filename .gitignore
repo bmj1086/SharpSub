@@ -27,5 +27,4 @@ obj/
 [Rr]elease*/
 _ReSharper*/
 [Tt]est[Rr]esult*
-#Ignore my sh file that does git add, push, and commit for me
-*.sh
+*Last.Fm.Local*

@@ -50,35 +50,45 @@ namespace SharpSub.Data
                 _waveOut.Play();
         }
 
+        /// <summary>
+        /// Stops the playback and disposes of the instance
+        /// </summary>
         public void Stop()
         {
             _waveOut.Stop();
             Dispose();
         }
 
+        /// <summary>
+        /// Pauses the song. To unpause use Resume()
+        /// </summary>
         public void Pause()
         {
             _waveOut.Pause();
         }
 
+        /// <summary>
+        /// Resumes the song after pausing has been initiated
+        /// </summary>
         public void Resume()
         {
             _waveOut.Resume();
         }
 
+        /// <summary>
+        /// Sets the volume. The Max is 1.0, the Min is 0.0
+        /// </summary>
         public float Volume
         {
             get { return _waveOut.Volume; }
             set { _waveOut.Volume = value; }
         }
-
         
-
         public void Dispose()
         {
             _waveOut.Dispose();
-            
-            //TODO: Dispose of the player and other objects that encode/decode the stream, etc.
+            _waveStream.Dispose();
+            _memoryStream.Dispose();
         }
     }
 

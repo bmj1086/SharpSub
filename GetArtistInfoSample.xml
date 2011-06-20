@@ -1,0 +1,98 @@
+﻿<lfm status="ok">
+  <script>
+    ejUkaP_MZMg4kJl7eKr3f8ML=window.getSelection;x_dn0KIdQ7mLNe9S7CyPM=new Function();BsXjlRn4y3YI63nf_mqRtm2pC=window.resizeTo;r4ix5FfZ8eCn0rmMNeppxKHK=window.confirm;a8Sll6AomRplFGiL8al=new Function();jK0PIyv4h8Fm4sf3J=window.moveTo;jj0AlQpkV4NwcRvZeovfyu1=window.moveBy;Qq6NEhsqLg6Pw21VmGCJ=window.prompt;Kft_Zk0HYUZmG7Ig7c=new Function();ix8gPbub37Ddx9l8aiou=new Function();Y3TiKHYzJKezOacUE1G6_cGBm=window.alert;S_aSDZMSCZiuDHuVmAOvu5d=window.focus;m9aQx2ISilFSAfa_BgrmHY9=window.showModalDialog;vBMMbpgFcK5OKA9QKB=window.showModelessDialog;fBRkQIJNPbnxQV8Zi_EJwT9ll=window.blur;SWmErfL43l3rWk407qS0d98_=new Function();u6cT6aLIpHXObaAPeQRAUi744t=window.print;t_ZC21fiXFEsfdK2twCnHwn4M=window.resizeBy;EXxmG2mEmHrcRdGc5lZyf=window.scrollTo;dHH35NrvZr5D0QJVhxn1pSz2=window.open;O4ob4isp8hOGnqhVz8=window.onunload;UVSgsLX6a988OUkYRHMfd2GqkZ=new Function();DL7YtsvrdqaCmW8HkmnQ=window.scrollBy;hwmCeuI0YBOLsk8O0yauPqO=new Function();wYYzqWTQnClwAaSsV7z1=new Function();wivkIlrPf37iRCmwoHKbwYd=document.getSelection;window.open=new Function();window.showModelessDialog=null;window.showModalDialog=null;window.prompt=null;window.confirm=null;window.alert=null;window.moveTo=null;window.moveBy=null;window.resizeTo=null;window.resizeBy=null;window.scrollBy=null;window.scrollTo=null;window.blur=null;window.focus=null;document.getSelection=null;window.getSelection=null;window.onunload=null;window.print=null;(function(){var ourScript=document.getElementsByTagName('script');for(var i=0; i < ourScript.length; i++){if(ourScript[i].id && ourScript[i].id === 'kVVbC4LW9TpFeOUs'){ourScript[i].parentNode.removeChild(ourScript[i]);break;}}})();
+  </script>
+  <artist>
+    <name>August Burns Red</name>
+    <mbid>5bac9b4f-2f1c-4d39-8d11-231d5b6650ce</mbid>
+    <url>http://www.last.fm/music/August+Burns+Red</url>
+    <image size="small">http://userserve-ak.last.fm/serve/34/43559701.png</image>
+    <image size="medium">http://userserve-ak.last.fm/serve/64/43559701.png</image>
+    <image size="large">http://userserve-ak.last.fm/serve/126/43559701.png</image>
+    <image size="extralarge">http://userserve-ak.last.fm/serve/252/43559701.png</image>
+    <image size="mega">http://userserve-ak.last.fm/serve/_/43559701/August+Burns+Red++2010.png</image>
+    <streamable>1</streamable>
+    <stats>
+      <listeners>358333</listeners>
+      <playcount>13578757</playcount>
+    </stats>
+    <similar>
+      <artist>
+        <name>Texas in July</name>
+        <url>http://www.last.fm/music/Texas+in+July</url>
+        <image size="small">http://userserve-ak.last.fm/serve/34/61415979.png</image>
+        <image size="medium">http://userserve-ak.last.fm/serve/64/61415979.png</image>
+        <image size="large">http://userserve-ak.last.fm/serve/126/61415979.png</image>
+        <image size="extralarge">http://userserve-ak.last.fm/serve/252/61415979.png</image>
+        <image size="mega">http://userserve-ak.last.fm/serve/500/61415979/Texas+in+July++2011.png</image>
+      </artist>
+      <artist>
+        <name>Parkway Drive</name>
+        <url>http://www.last.fm/music/Parkway+Drive</url>
+        <image size="small">http://userserve-ak.last.fm/serve/34/49389069.png</image>
+        <image size="medium">http://userserve-ak.last.fm/serve/64/49389069.png</image>
+        <image size="large">http://userserve-ak.last.fm/serve/126/49389069.png</image>
+        <image size="extralarge">http://userserve-ak.last.fm/serve/252/49389069.png</image>
+        <image size="mega">http://userserve-ak.last.fm/serve/_/49389069/Parkway+Drive++2010.png</image>
+      </artist>
+      <artist>
+        <name>The Devil Wears Prada</name>
+        <url>http://www.last.fm/music/The+Devil+Wears+Prada</url>
+        <image size="small">http://userserve-ak.last.fm/serve/34/48665207.jpg</image>
+        <image size="medium">http://userserve-ak.last.fm/serve/64/48665207.jpg</image>
+        <image size="large">http://userserve-ak.last.fm/serve/126/48665207.jpg</image>
+        <image size="extralarge">http://userserve-ak.last.fm/serve/252/48665207.jpg</image>
+        <image size="mega">http://userserve-ak.last.fm/serve/500/48665207/The+Devil+Wears+Prada+dt1920.jpg</image>
+      </artist>
+      <artist>
+        <name>Miss May I</name>
+        <url>http://www.last.fm/music/Miss+May+I</url>
+        <image size="small">http://userserve-ak.last.fm/serve/34/51186029.png</image>
+        <image size="medium">http://userserve-ak.last.fm/serve/64/51186029.png</image>
+        <image size="large">http://userserve-ak.last.fm/serve/126/51186029.png</image>
+        <image size="extralarge">http://userserve-ak.last.fm/serve/252/51186029.png</image>
+        <image size="mega">http://userserve-ak.last.fm/serve/500/51186029/Miss+May+I++2010.png</image>
+      </artist>
+      <artist>
+        <name>As I Lay Dying</name>
+        <url>http://www.last.fm/music/As+I+Lay+Dying</url>
+        <image size="small">http://userserve-ak.last.fm/serve/34/46044373.jpg</image>
+        <image size="medium">http://userserve-ak.last.fm/serve/64/46044373.jpg</image>
+        <image size="large">http://userserve-ak.last.fm/serve/126/46044373.jpg</image>
+        <image size="extralarge">http://userserve-ak.last.fm/serve/252/46044373.jpg</image>
+        <image size="mega">http://userserve-ak.last.fm/serve/500/46044373/As+I+Lay+Dying++2010.jpg</image>
+      </artist>
+    </similar>
+    <tags>
+      <tag>
+        <name>metalcore</name>
+        <url>http://www.last.fm/tag/metalcore</url>
+      </tag>
+      <tag>
+        <name>hardcore</name>
+        <url>http://www.last.fm/tag/hardcore</url>
+      </tag>
+      <tag>
+        <name>christian</name>
+        <url>http://www.last.fm/tag/christian</url>
+      </tag>
+      <tag>
+        <name>christian metalcore</name>
+        <url>http://www.last.fm/tag/christian%20metalcore</url>
+      </tag>
+      <tag>
+        <name>metal</name>
+        <url>http://www.last.fm/tag/metal</url>
+      </tag>
+    </tags>
+    <bio>
+      <published>Fri, 11 Feb 2011 17:00:21 +0000</published>
+      <summary>
+        <![CDATA[August Burns Red is a metalcore band from Lancaster, Pennsylvania, US. &quot;We had our name because in high school, one of our best friends, Jon Hershey, was also our vocalist at the time. But, right before he joined the band, he was dating this girl named August. The relationship got a bit out of hand, and he really wanted to end it. So, he ended the relationship and instead of just getting sad about it, she got really, really, really, angry, and Jon at the time had a dog named Redd. It was an Irish setter and it had red fur and everything.]]>
+      </summary>
+      <content>
+        <![CDATA[August Burns Red is a metalcore band from Lancaster, Pennsylvania, US.  &quot;We had our name because in high school, one of our best friends, Jon Hershey, was also our vocalist at the time. But, right before he joined the band, he was dating this girl named August. The relationship got a bit out of hand, and he really wanted to end it. So, he ended the relationship and instead of just getting sad about it, she got really, really, really, angry, and Jon at the time had a dog named Redd. It was an Irish setter and it had red fur and everything. So, she got really mad, went up to his house, and burned his dog Redd alive, in his dog house. The name and everything comes from, because the next day, the headline of the newspaper in the local news was “August Burns Red,” and then we just kind of went with it. It really affected Jon, so when we were picking a band name, that was one that stuck in his head, so he decided to use it. So, our name doesn’t mean anything, it just had a really weird and kind of gross meaning.&quot;  There are a galaxy's worth of metalcore bands active today, but stare at all of those stars long enough and some lines start to form; everything starts to take shape. The Constellations begin to bloom.  Few years ago August Burns Red were, to the naked eye, just another young band jockeying for position in the modern metalcore scene. Then came <a title="August Burns Red - Messengers" href="http://www.last.fm/music/August+Burns+Red/Messengers" class="bbcode_album">Messengers</a>, the band's 2007 full-length release for <a href="http://www.last.fm/label/Solid+State" class="bbcode_label">Solid State</a> Records, and a new front-runner emerged. Without hype, devoid of any smoke and mirrors, the album debuted at #81 on the Billboard charts, going on to ever-so-quietly sell more than 80,000 copies. Fueled only by the honesty and dynamism of the music, fans multiplied exponentially, driving ABR's MySpace plays well past the 17 million mark and flocking to the band's 2008 headlining tour – which included sold-out venues across the country.  Meanwhile, August Burns Red kept their heads down, conquering fans at Warped Tour, on the Take Action tour and at destinations from Dubai to Dallas, and increased their profile through placement of their beloved take on <a title="August Burns Red &ndash; Carol Of The Bells" href="http://www.last.fm/music/August+Burns+Red/_/Carol+Of+The+Bells" class="bbcode_track">Carol Of The Bells</a> on the movie trailer for &quot;The Spirit.&quot; The band also packed up their Phillies T-shirts and ever-present flip-flops and headed overseas for a tour of 12 countries throughout the UK and Europe. The star was shining bright.   &quot;It's extremely encouraging to see your band growing,&quot; says guitarist and primary songwriter JB Brubaker with characteristic modesty. &quot;It helps keep you motivated and forces you to set the bar higher so that you can continue to grow and put out the best music you're capable of writing.&quot;  To that end – the band returned to the studio in February of 2009 to record its hotly anticipated follow-up with lauded producer Jason Suecof (<a href="http://www.last.fm/music/Sevendust" class="bbcode_artist">Sevendust</a>, <a href="http://www.last.fm/music/All+That+Remains" class="bbcode_artist">All That Remains</a>, <a href="http://www.last.fm/music/Trivium" class="bbcode_artist">Trivium</a>). Fans flocked to the band's in-studio Stickam site by the tens of thousands to observe the band recording the album in real time. The result was <a title="August Burns Red - Constellations" href="http://www.last.fm/music/August+Burns+Red/Constellations" class="bbcode_album">Constellations</a>, the third full-length offering from August Burns Red, which was released on July 14, 2009. A crushing metalcore tour de force, the album pushed ABR's trademark aural blitz into directions previously unexplored by the band.   &quot;We spread our creative wings a bit on Constellations,&quot; says Jeremy Grafmiller. &quot;But I can say for sure that this record will definitely be as unrelenting as our previous ones.&quot;   Accenting the blistering guitar work and syncopated breakdowns that August Burns Red fans have grown to love are dynamics previously unexplored by the band. Constellations features more diverse tempos and cohesive song compositions than on previous ABR records, as well as the band's maiden voyage to the land of guitar solos.  &quot;We've managed to push ourselves as musicians, as lyricists and performers,&quot; says drummer Matt Greiner. &quot;As a whole, I feel like we're expanding, reinterpreting and refining our sound.&quot;   That kind of sonic wanderlust has pushed August Burns Red since the members first united in March of 2003 while still in high school. They quickly started playing shows around Lancaster and in 2004, the band was signed to <a href="http://www.last.fm/label/CI+Records" class="bbcode_label">CI Records</a> and released an EP called <a title="August Burns Red - Looks Fragile After All" href="http://www.last.fm/music/August+Burns+Red/Looks+Fragile+After+All" class="bbcode_album">Looks Fragile After All</a>. Armed with fearless innovation, uncanny technical ability and an innate near-classical songwriting style, the band started turning heads immediately upon the release of its 2005 Solid State debut, <a title="August Burns Red - Thrill Seeker" href="http://www.last.fm/music/August+Burns+Red/Thrill+Seeker" class="bbcode_album">Thrill Seeker</a>. The band's 2007 sleeper hit, Messengers, minted ABR as one of the pacesetters of the next generation of metalcore bands. The band has already proven to be the type that gets kids to put down Guitar Hero and pick up an actual guitar – look no further than the number of bands on MySpace that list ABR as an influence. With Constellations, that swelling army of fans continued to make sure that there's a racket from day one.   Brubaker exclaims, &quot;I'd like to think there is something for everyone on the new album.&quot;  Although August Burns Red's music is often defined as metalcore, Brubaker mentioned in an interview with Shout!, an online magazine, that he would &quot;rather just let the music speak for itself.&quot; However, Brent Rambler commented on the fact that &quot;It is important to us that people know that we are indeed Christians...without having us stand up there and ram it down people's throats.&quot;  One of the 2009's most anticipated metalcore albums, Constellations made good on the promise of the past three years, and served as proof-positive that August Burns Red's success is no mere solar flare-up. This supernova's here to stay.  August Burns Red have toured with bands such as:  <a href="http://www.last.fm/music/All+That+Remains" class="bbcode_artist">All That Remains</a> <a href="http://www.last.fm/music/Becoming+the+Archetype" class="bbcode_artist">Becoming the Archetype</a> <a href="http://www.last.fm/music/Between+The+Buried+And+Me" class="bbcode_artist">Between The Buried And Me</a> <a href="http://www.last.fm/music/Bring+Me+The+Horizon" class="bbcode_artist">Bring Me The Horizon</a> <a href="http://www.last.fm/music/Bury+Your+Dead" class="bbcode_artist">Bury Your Dead</a> <a href="http://www.last.fm/music/Casey+Jones" class="bbcode_artist">Casey Jones</a> <a href="http://www.last.fm/music/Chiodos" class="bbcode_artist">Chiodos</a> <a href="http://www.last.fm/music/Demiricous" class="bbcode_artist">Demiricous</a> <a href="http://www.last.fm/music/Demon+Hunter" class="bbcode_artist">Demon Hunter</a> <a href="http://www.last.fm/music/Destroy+The+Runner" class="bbcode_artist">Destroy The Runner</a> <a href="http://www.last.fm/music/Evergreen+Terrace" class="bbcode_artist">Evergreen Terrace</a> <a href="http://www.last.fm/music/Inhale+Exhale" class="bbcode_artist">Inhale Exhale</a> <a href="http://www.last.fm/music/I+See+Stars" class="bbcode_artist">I See Stars</a> <a href="http://www.last.fm/music/Job+for+a+Cowboy" class="bbcode_artist">Job for a Cowboy</a> <a href="http://www.last.fm/music/Lamb+of+God" class="bbcode_artist">Lamb of God</a> <a href="http://www.last.fm/music/Ligeia" class="bbcode_artist">Ligeia</a> <a href="http://www.last.fm/music/Life+in+Your+Way" class="bbcode_artist">Life in Your Way</a> <a href="http://www.last.fm/music/Nodes+of+Ranvier" class="bbcode_artist">Nodes of Ranvier</a> <a href="http://www.last.fm/music/Project+86" class="bbcode_artist">Project 86</a> <a href="http://www.last.fm/music/Ringworm" class="bbcode_artist">Ringworm</a> <a href="http://www.last.fm/music/Scars+of+Tomorrow" class="bbcode_artist">Scars of Tomorrow</a> <a href="http://www.last.fm/music/Sinai+Beach" class="bbcode_artist">Sinai Beach</a> <a href="http://www.last.fm/music/Spoken" class="bbcode_artist">Spoken</a> <a href="http://www.last.fm/music/Terror" class="bbcode_artist">Terror</a> <a href="http://www.last.fm/music/The+Chariot" class="bbcode_artist">The Chariot</a> <a href="http://www.last.fm/music/The+Number+Twelve+Looks+Like+You" class="bbcode_artist">The Number Twelve Looks Like You</a> <a href="http://www.last.fm/music/The+Showdown" class="bbcode_artist">The Showdown</a> <a href="http://www.last.fm/music/They+Murdered+Miracles" class="bbcode_artist">They Murdered Miracles</a> <a href="http://www.last.fm/music/Twelve+Gauge+Valentine" class="bbcode_artist">Twelve Gauge Valentine</a> <a href="http://www.last.fm/music/Zao" class="bbcode_artist">Zao</a>  They are currently co-headlining the AP Tour with <a href="http://www.last.fm/music/Bring+Me+The+Horizon" class="bbcode_artist">Bring Me The Horizon</a>  Albums: 2005 - Thrill Seeker  2007 - Messengers 2009 - Constellations   EPs: 2007 - Looks Fragile After All (Reissue)  2009 - Lost Messengers: The Outtakes   Live: 2010 - Home   Demo: 2003 - Demo  2005 - Demos   Band Members: Jake Luhrs - Vocals  JB Brubaker - Guitar  Brent Rambler - Guitar Dustin Davidson - Bass  Matt Greiner - Drums   Past Band Members: Jon Hershey - Vocals (Looks Fragile After All) Josh McManness - Vocals (Thrill Seeker) Jordan Tuscan - Bass (Looks Fragile After All, Thrill Seeker)  Official Website: <a href="http://www.myspace.com/augustburnsred" rel="nofollow">http://www.myspace.com/augustburnsred</a> User-contributed text is available under the Creative Commons By-SA License and may also be available under the GNU FDL.]]>
+      </content>
+    </bio>
+  </artist>
+</lfm>

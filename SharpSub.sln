@@ -14,6 +14,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpSub.Data.Tests", "Shar
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{C8EF7DE8-D6F5-4DD3-9DBD-A8871F1016D6}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Last.Fm.Local", "Last.Fm.Local", "{5BB3EFD9-3C04-4B4C-BC31-AA9AD3B96102}"
+	ProjectSection(SolutionItems) = preProject
+		Authentication.cs = Authentication.cs
+		GetArtistInfoSample.xml = GetArtistInfoSample.xml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = SharpSub.vsmdi
