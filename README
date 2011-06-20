@@ -1,0 +1,3 @@
+SharpSub is a wrapper for Subsonic (www.subsonic.org). Not only am I confident that this is the most efficient wrapper you will ever use, I am also confident that it is the most reliable. I have even created my own GUI application that uses this wrapper. Check it out at https://github.com/bmj1086/SuperSonic
+
+IMPORTANT: To use the Last.fm APIs you must create a solution folder in the main directory called Last.Fm.Local and add a cs file called Authentication.cs with two strings; One is API_KEY and the other is SECRET_KEY. When you sign up for the Last.fm API you'll receive these. Without these you will not be able to use the Last.fm API. If you choose not to use the Last.fm API you must remove the methods relying on it.
