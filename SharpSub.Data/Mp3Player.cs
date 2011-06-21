@@ -18,14 +18,26 @@ namespace SharpSub.Data
         private WaveStream _waveStream;
         private Stream _memoryStream;
         internal PlaybackState PlaybackState { get { return _waveOut.PlaybackState; } }
-        internal string playingName;
         internal readonly Song CurrentSong;
+
+        internal int Duration
+        {
+            //not sure if this is right or not yet. Still working on it
+            get { return (int) _waveStream.Length; }
+        }
+
+        internal long Position
+        {
+            //not sure if this is right or not yet. Still working on it
+            get { return _waveStream.Position; }
+            set { _waveStream.Position = value; } 
+        }
 
         internal Mp3Player(Song song)
         {
             CurrentSong = song;
             _memoryStream = new MemoryStream();
-
+            
             using (Stream stream = SubsonicRequest.GetSongStream(CurrentSong))
             {
                 byte[] buffer = new byte[32768];
@@ -49,6 +61,7 @@ namespace SharpSub.Data
         {
             if (this.PlaybackState == PlaybackState.Stopped)
                 _waveOut.Play();
+
         }
 
         /// <summary>

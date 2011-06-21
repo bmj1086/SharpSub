@@ -7,7 +7,6 @@ using System.Linq;
 using System.Net;
 using System.Security.Authentication;
 using System.Text;
-using System.Xml;
 using System.Xml.Linq;
 
 namespace SharpSub.Data
