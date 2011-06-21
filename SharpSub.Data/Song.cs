@@ -1,51 +1,40 @@
 ﻿using System.Xml;
 using System;
+using System.Xml.Linq;
 
 namespace SharpSub.Data
 {
     public class Song
     {
-        private readonly XmlElement _itemElement;
+        private readonly XElement _itemElement;
         
-        public Song(XmlElement itemElement)
+        public Song(XElement itemElement)
         {
             _itemElement = itemElement;
 
-            ID = GetAttribute(Attribute.id);
-            Parent = GetAttribute(Attribute.parent);
-            Title = GetAttribute(Attribute.title);
-            IsDir = Convert.ToBoolean(GetAttribute(Attribute.isDir));
-            Album = GetAttribute(Attribute.album);
-            Artist = GetAttribute(Attribute.artist);
-            Duration = Convert.ToInt16(GetAttribute(Attribute.duration));
-            BitRate = Convert.ToInt16(GetAttribute(Attribute.bitRate));
-            Track = Convert.ToInt16(GetAttribute(Attribute.track));
-            Year = Convert.ToInt16(GetAttribute(Attribute.year));
-            Genre = GetAttribute(Attribute.genre);
-            Size = Convert.ToInt32(GetAttribute(Attribute.size));
-            Suffix = GetAttribute(Attribute.suffix);
-            ContentType = GetAttribute(Attribute.contentType);
-            IsVideo = Convert.ToBoolean(GetAttribute(Attribute.isVideo));
-            CoverArt = GetAttribute(Attribute.coverArt);
-            Path = GetAttribute(Attribute.path);
+            ID = Utility.GetElementAttribute(_itemElement, Attribute.ID.ToString().ToLower());
+            Parent = Utility.GetElementAttribute(_itemElement, Attribute.Parent.ToString().ToLower());
+            Title = Utility.GetElementAttribute(_itemElement, Attribute.Title.ToString().ToLower());
+            IsDir = Convert.ToBoolean(Utility.GetElementAttribute(_itemElement, Attribute.IsDir.ToString().ToLower()));
+            Album = Utility.GetElementAttribute(_itemElement, Attribute.Album.ToString().ToLower());
+            Artist = Utility.GetElementAttribute(_itemElement, Attribute.Artist.ToString().ToLower());
+            Duration = Convert.ToInt16(Utility.GetElementAttribute(_itemElement, Attribute.Duration.ToString().ToLower()));
+            BitRate = Convert.ToInt16(Utility.GetElementAttribute(_itemElement, Attribute.BitRate.ToString().ToLower()));
+            Track = Convert.ToInt16(Utility.GetElementAttribute(_itemElement, Attribute.Track.ToString().ToLower()));
+            Year = Convert.ToInt16(Utility.GetElementAttribute(_itemElement, Attribute.Year.ToString().ToLower()));
+            Genre = Utility.GetElementAttribute(_itemElement, Attribute.Genre.ToString().ToLower());
+            Size = Convert.ToInt32(Utility.GetElementAttribute(_itemElement, Attribute.Size.ToString().ToLower()));
+            Suffix = Utility.GetElementAttribute(_itemElement, Attribute.Suffix.ToString().ToLower());
+            ContentType = Utility.GetElementAttribute(_itemElement, Attribute.ContentType.ToString().ToLower());
+            IsVideo = Convert.ToBoolean(Utility.GetElementAttribute(_itemElement, Attribute.IsVideo.ToString().ToLower()));
+            CoverArt = Utility.GetElementAttribute(_itemElement, Attribute.CoverArt.ToString().ToLower());
+            Path = Utility.GetElementAttribute(_itemElement, Attribute.Path.ToString().ToLower());
         }
 
-        private string GetAttribute(Attribute attribute)
+       private enum Attribute
         {
-            try
-            {
-                return _itemElement.Attributes[attribute.ToString()].InnerText;
-            }
-            catch
-            {
-                return null;
-            }
-        }
-
-        private enum Attribute
-        {
-            id, parent, title, isDir, album, artist, duration, bitRate, track,
-            year, genre, size, suffix, contentType, isVideo, coverArt, path
+            ID, Parent, Title, IsDir, Album, Artist, Duration, BitRate, Track,
+            Year, Genre, Size, Suffix, ContentType, IsVideo, CoverArt, Path
 
         }
 

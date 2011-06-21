@@ -7,6 +7,7 @@ using System.Net;
 using System.Text;
 using System.Xml;
 using System.Configuration;
+using System.Xml.Linq;
 
 namespace SharpSub.Data
 {
@@ -36,24 +37,29 @@ namespace SharpSub.Data
             public IList<string> SimilarArtists { get; protected set; }
             public IList<string> Tags { get; protected set; }
             public string Summary { get; protected set; }
-            private readonly XmlDocument xmlDocument;
+            private readonly XDocument xDocument = null;
 
             public ArtistInfo(string xml)
             {
-                xmlDocument = new XmlDocument();
-                xmlDocument.LoadXml(xml);
+                xDocument = XDocument.Parse(xml);
             }
 
+            
             public Bitmap Image(ImageSize imageSize)
             {
                 try
                 {
-                    XmlElement element = xmlDocument.GetElementsByTagName("artist")[0] as XmlElement;
-                    XmlNodeList imageElements = element.GetElementsByTagName("image");
+                    var imageElements = xDocument.Elements().Where(e => e.Name == "artist" && e.Parent.Name == "lfm")
+                        .First().Elements().Where(el => el.Name == "image").ToList();
 
-                    string imageUrl = imageElements.Cast<XmlElement>().Where(
-                                        imageElement => imageElement.Attributes["size"].InnerText == imageSize.ToString().ToLower()).
-                                            FirstOrDefault().InnerText;
+                    var imageUrl = (from a in imageElements.Attributes()
+                                   where (a.Name == "size") && (a.Value == imageSize.ToString().ToLower())
+                                   select a).ToList().FirstOrDefault().Value.ToString();
+
+                    // Old XmlDocument style
+                    //string imageUrl = imageElements.Where(
+                    //                    imageElement => imageElement.Attributes["size"].InnerText == imageSize.ToString().ToLower()).
+                    //                        FirstOrDefault().InnerText;
 
                     WebRequest request = WebRequest.Create(imageUrl);
                     Stream responseStream = request.GetResponse().GetResponseStream();

@@ -65,7 +65,7 @@
   <ItemGroup>
     <Compile Include="Album.cs" />
     <Compile Include="Artist.cs" />
-    <Compile Include="CurrentPlaylist.cs" />
+    <Compile Include="Playback.cs" />
     <Compile Include="LastFm.cs" />
     <Compile Include="Mp3Player.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -82,6 +82,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Song.cs" />
     <Compile Include="SubsonicRequest.cs" />
+    <Compile Include="Utility.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -144,10 +145,8 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="no-cover-art.jpg" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Last.Fm.Local\GetArtistInfoSample.xml" />

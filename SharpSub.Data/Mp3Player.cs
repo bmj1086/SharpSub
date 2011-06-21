@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -11,16 +12,16 @@ using NAudio.Wave;
 
 namespace SharpSub.Data
 {
-    class Mp3Player : IDisposable
+    internal class Mp3Player : IDisposable
     {
         private WaveOut _waveOut;
         private WaveStream _waveStream;
         private Stream _memoryStream;
-        public PlaybackState PlaybackState { get { return _waveOut.PlaybackState; } }
-        public string playingName;
-        public readonly Song CurrentSong;
+        internal PlaybackState PlaybackState { get { return _waveOut.PlaybackState; } }
+        internal string playingName;
+        internal readonly Song CurrentSong;
 
-        public Mp3Player(Song song)
+        internal Mp3Player(Song song)
         {
             CurrentSong = song;
             _memoryStream = new MemoryStream();
@@ -44,7 +45,7 @@ namespace SharpSub.Data
         /// <summary>
         /// Only use this method to start playing the song. For unpausing use Resume()
         /// </summary>
-        public void Play()
+        internal void Play()
         {
             if (this.PlaybackState == PlaybackState.Stopped)
                 _waveOut.Play();
@@ -53,32 +54,38 @@ namespace SharpSub.Data
         /// <summary>
         /// Stops the playback and disposes of the instance
         /// </summary>
-        public void Stop()
+        internal void StopAndDispose()
         {
-            _waveOut.Stop();
+            if (PlaybackState != PlaybackState.Stopped)
+                _waveOut.Stop();
+            
             Dispose();
         }
 
         /// <summary>
         /// Pauses the song. To unpause use Resume()
         /// </summary>
-        public void Pause()
+        internal void Pause()
         {
-            _waveOut.Pause();
+            if (PlaybackState == PlaybackState.Playing)
+                _waveOut.Pause();
+            throw new ConstraintException("The player is currently not playing. Pausing is not possible.");
         }
 
         /// <summary>
         /// Resumes the song after pausing has been initiated
         /// </summary>
-        public void Resume()
+        internal void Resume()
         {
-            _waveOut.Resume();
+            if (PlaybackState == PlaybackState.Paused)
+                _waveOut.Resume();
+            throw new ConstraintException("The player is currently not paused. Resuming is not possible.");
         }
 
         /// <summary>
         /// Sets the volume. The Max is 1.0, the Min is 0.0
         /// </summary>
-        public float Volume
+        internal float Volume
         {
             get { return _waveOut.Volume; }
             set { _waveOut.Volume = value; }

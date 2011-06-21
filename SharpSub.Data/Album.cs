@@ -1,39 +1,28 @@
 ﻿using System;
 using System.Drawing;
 using System.Xml;
+using System.Xml.Linq;
 
 namespace SharpSub.Data
 {
     public class Album
     {
-        public Album(XmlElement itemElement)
+        public Album(XElement itemElement)
         {
             _itemElement = itemElement;
 
-            ID = GetAttribute(Attribute.id);
-            CoverArtID = GetAttribute(Attribute.coverArt);
-            Parent = GetAttribute(Attribute.parent);
-            Title = GetAttribute(Attribute.title);
-            IsDir = Convert.ToBoolean(GetAttribute(Attribute.isDir));
-            Artist = GetAttribute(Attribute.artist);
-        }
-
-        public string GetAttribute(Attribute attribute)
-        {
-            try
-            {
-                return _itemElement.Attributes[attribute.ToString()].InnerText;
-            }
-            catch
-            {
-                return null;
-            }
+            ID = Utility.GetElementAttribute(itemElement, Attribute.ID.ToString().ToLower());
+            CoverArtID = Utility.GetElementAttribute(itemElement, Attribute.CoverArt.ToString().ToLower());
+            Parent = Utility.GetElementAttribute(itemElement, Attribute.Parent.ToString().ToLower());
+            Title = Utility.GetElementAttribute(itemElement, Attribute.Title.ToString().ToLower());
+            IsDir = Convert.ToBoolean(Utility.GetElementAttribute(itemElement, Attribute.IsDir.ToString().ToLower()));
+            Artist = Utility.GetElementAttribute(itemElement, Attribute.Artist.ToString().ToLower());
         }
 
         public enum Attribute
         {
-            id, parent, title, isDir, album, artist, duration, bitRate, track,
-            year, genre, size, suffix, contentType, isVideo, coverArt, path
+            ID, Parent, Title, IsDir, Album, Artist, Duration, BitRate, Track,
+            Year, Genre, Size, Suffix, ContentType, IsVideo, CoverArt, Path
 
         }
 
@@ -42,7 +31,7 @@ namespace SharpSub.Data
             return Title;
         }
 
-        public readonly XmlElement _itemElement;
+        public readonly XElement _itemElement;
         public string ID { get; protected set; }
         public string Parent { get; protected set; }
         public string Title { get; protected set; }

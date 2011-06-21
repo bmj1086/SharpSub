@@ -59,12 +59,5 @@ namespace SharpSub.Data.Properties {
                 resourceCulture = value;
             }
         }
-        
-        internal static System.Drawing.Bitmap no_cover_art {
-            get {
-                object obj = ResourceManager.GetObject("no_cover_art", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
     }
 }

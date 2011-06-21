@@ -8,6 +8,7 @@ using System.Net;
 using System.Security.Authentication;
 using System.Text;
 using System.Xml;
+using System.Xml.Linq;
 
 namespace SharpSub.Data
 {
@@ -99,12 +100,9 @@ namespace SharpSub.Data
         private static SubsonicResponse SendRequest(string requestURL)
         {
             WebRequest theRequest = WebRequest.Create(requestURL);
-            WebResponse response = theRequest.GetResponse();
-            StreamReader sr = new StreamReader(response.GetResponseStream());
-            var xmlResultString = sr.ReadToEnd();
-            XmlDocument responseXml = new XmlDocument();
-            responseXml.LoadXml(xmlResultString);
-            return new SubsonicResponse(responseXml);
+            Stream responseStream = theRequest.GetResponse().GetResponseStream();
+            XDocument xdoc = XDocument.Load(responseStream);
+            return new SubsonicResponse(xdoc);
         }
 
         /// <summary>
@@ -169,10 +167,10 @@ namespace SharpSub.Data
             var response = SendRequest(requestURL);
 
             if (!response.Successful)
-                throw new Exception(String.Format("Error returned from Subsonic server : {0}", response.GetErrorMessage()));
+                throw new Exception(String.Format("Error returned from Subsonic server : {0}", response.ErrorMessage));
 
-            var artistElements = response.ResponseXml.GetElementsByTagName(ArtistXMLTag);
-            return (from XmlElement artistElement in artistElements select new Artist(artistElement)).ToList();
+            IList<XElement> artistElements = Utility.GetElementsFromDocument(response.ResponseXml, ArtistXMLTag);
+            return (from artistElement in artistElements select new Artist(artistElement)).ToList();
         }
 
         public static IList<Song> GetAlbumSongs(string albumId)
@@ -182,11 +180,12 @@ namespace SharpSub.Data
             var response = SendRequest(url);
             
             if (!response.Successful)
-                throw new Exception(String.Format("Error returned from Subsonic server: {0}", response.GetErrorMessage()));
+                throw new Exception(String.Format("Error returned from Subsonic server: {0}", response.ErrorMessage));
 
-            var songElements = response.ResponseXml.GetElementsByTagName(SongXMLTag);
-            return (from XmlElement songElement in songElements select new Song(songElement)).ToList();
+            IList<XElement> songElements = Utility.GetElementsFromDocument(response.ResponseXml, SongXMLTag);
+            return (from songElement in songElements select new Song(songElement)).ToList();
         }
+
         
         public static IList<Album> GetArtistAlbums(Artist artist)
         {
@@ -195,10 +194,10 @@ namespace SharpSub.Data
             var response = SendRequest(url);
 
             if (!response.Successful)
-                throw new Exception(String.Format("Error returned from Subsonic server :{0}", response.GetErrorMessage()));
+                throw new Exception(String.Format("Error returned from Subsonic server :{0}", response.ErrorMessage));
 
-            var albumElements = response.ResponseXml.GetElementsByTagName(AlbumXMLTag);
-            return (from XmlElement albumElement in albumElements select new Album(albumElement)).ToList();
+            IList<XElement> albumElements = Utility.GetElementsFromDocument(response.ResponseXml, AlbumXMLTag);
+            return (from albumElement in albumElements select new Album(albumElement)).ToList();
         }
 
 
@@ -220,7 +219,7 @@ namespace SharpSub.Data
             catch (Exception ex)
             {
                 //TODO: Write to logger
-                return new Bitmap(Properties.Resources.no_cover_art);
+                return null;
             }
             
         }

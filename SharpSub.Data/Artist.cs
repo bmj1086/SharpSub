@@ -1,42 +1,31 @@
 ﻿using System.Xml;
+using System.Xml.Linq;
 
 namespace SharpSub.Data
 {
     public class Artist
     {
-        public Artist(XmlElement itemElement)
+        public readonly XElement _itemElement;
+        public string ID { get; protected set; }
+        public string Name { get; protected set; }
+        
+        public Artist(XElement itemElement)
         {
             _itemElement = itemElement;
 
-            ID = GetAttribute(Attribute.id);
-            Name = GetAttribute(Attribute.name);
-        }
-
-        private string GetAttribute(Attribute attribute)
-        {
-            try
-            {
-                return _itemElement.Attributes[attribute.ToString()].InnerText;
-            }
-            catch
-            {
-                return null;
-            }
+            ID = Utility.GetElementAttribute(_itemElement, Attribute.ID.ToString().ToLower());
+            Name = Utility.GetElementAttribute(_itemElement, Attribute.Name.ToString().ToLower());
         }
 
         private enum Attribute
         {
-            id, name
+            ID, Name
         }
 
         public override string ToString()
         {
             return Name;
         }
-
-        public readonly XmlElement _itemElement;
-        public string ID { get; protected set; }
-        public string Name { get; protected set; }
 
         
     }

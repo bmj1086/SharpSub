@@ -5,26 +5,38 @@ using System.Text;
 
 namespace SharpSub.Data
 {
-    public static class CurrentPlaylist
+    public static class Playback
     {
-        private static Queue<Song> _currentPlaylist;
-        public static bool RandomPlayback { get; set; }
+        private static IList<Song> _currentPlaylist;
         private static IList<int> _playedSongs;
-        private static int CurrentSong;
+        private static int CurrentSongIndex;
+        public static bool RandomPlay { get; set; }
+        private static Song _currentSong;
+        private static Mp3Player mp3player;
+        private static Random random = new Random();
 
-        private static void Play(Song song)
+        private static void StartNew(Song song)
         {
-            var songStream = SubsonicRequest.GetSongStream(song);
+            _currentSong = song;
+
+            if (mp3player != null)
+                mp3player.StopAndDispose();
+
+            mp3player = new Mp3Player(_currentSong);
+            mp3player.Play();
         }
 
         /// <summary>
         /// Use to play a song already in the current playlist
         /// </summary>
-        /// <param name="positionInPlaylist">The index position in the current playlist of the song to play</param>
+        /// <param name="playlistIndex">The index position in the current playlist of the song to play</param>
         /// <param name="restart">If the song is currently playing and you want to restart it set this to true</param>
-        public static void Play(int? positionInPlaylist = null, bool restart = false)
+        public static void Play(int? playlistIndex = null)
         {
-            
+            if (mp3player != null)
+                mp3player.StopAndDispose();
+
+
         }
 
         /// <summary>
@@ -40,18 +52,22 @@ namespace SharpSub.Data
         /// </summary>
         /// <param name="songList">The list of songs to add to the playlist.</param>
         /// <param name="startPlayback">Set to true if you want the playlist to start playing immediately.</param>
-        /// <param name="random">Set to true if the user wants random playback.</param>
-        public static void Add(IEnumerable<Song> songList, bool startPlayback, bool random = false)
+        /// <param name="randomPlay">Set to true if the user wants random playback.</param>
+        public static void Add(IEnumerable<Song> songList, bool startPlayback, bool randomPlay = false)
         {
             foreach (Song song in songList)
             {
-                _currentPlaylist.Enqueue(song);
+                _currentPlaylist.Add(song);
             }
 
-            RandomPlayback = random;
+            RandomPlay = randomPlay;
+            CurrentSongIndex = 0;
 
+            if (RandomPlay)
+                CurrentSongIndex = random.Next(_currentPlaylist.Count);
+            
             if (startPlayback)
-                Play(_currentPlaylist.First());
+                Play(CurrentSongIndex);
         }
 
         //private static void Randomize()
@@ -83,7 +99,7 @@ namespace SharpSub.Data
 
         internal static void SongCompleted()
         {
-            _playedSongs.Add(CurrentSong); //TODO: Add property protected set.
+            _playedSongs.Add(CurrentSongIndex); //TODO: Add property protected set.
         }
     }
 }

@@ -74,22 +74,18 @@ namespace SharpSub.Data.Tests
             string serverURL = "bmjones.com:56565/music";
             string username = "Guest";
             string password = "notbrett";
-            SubsonicRequest.Login(serverURL, username, password);
-            
-            //Random random = new Random();
-            //var artistList = SubsonicRequest.GetArtistList();
-            //var artist = artistList[random.Next(artistList.Count)];
-            var artist = SubsonicRequest.GetArtistList().First();
+            bool logedIn = SubsonicRequest.Login(serverURL, username, password).Successful;
+
+            Random random = new Random();
+            var artistList = SubsonicRequest.GetArtistList();
+            var artist = artistList[random.Next(artistList.Count)];
+            //var artist = SubsonicRequest.GetArtistList().First();
 
             Album album = SubsonicRequest.GetArtistAlbums(artist).First();
             Song song = SubsonicRequest.GetAlbumSongs(album.ID).First();
 
             Mp3Player player = new Mp3Player(song);
-            player.Play();
-            DateTime tostop = DateTime.Now.AddSeconds(10);
-            while (DateTime.Now < tostop){}
-            player.Stop();
-            Debug.WriteLine("Stopped playback...");
+            Assert.AreEqual(true, player.PlaybackState == PlaybackState.Stopped);
         }
 
     }

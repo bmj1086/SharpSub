@@ -1,19 +1,16 @@
 ﻿using System;
+using System.Linq;
 using System.Net;
 using System.Xml;
+using System.Xml.Linq;
 
 namespace SharpSub.Data
 {
     public class SubsonicResponse
     {
-        private const int NO_ERROR = -1;
+        public XDocument ResponseXml { get; protected set; }
 
-        /* Example of a failed response
-        <subsonic-response status="failed" version="1.5.0">
-            <error code="10" message="Required parameter is missing."/>
-        </subsonic-response>
-        */
-        public SubsonicResponse(XmlDocument responseXml)
+        public SubsonicResponse(XDocument responseXml)
         {
             ResponseXml = responseXml;
             
@@ -32,54 +29,34 @@ namespace SharpSub.Data
 
         public string Status
         {
+            get { return Utility.GetElementAttribute(ResponseXml, "subsonic-response", "status"); }
+        }
+
+        
+        public string ResponseString
+        {
+            get { return ResponseXml == null ? string.Empty : ResponseXml.ToString(); }
+        }
+
+        public int? GetErrorCode
+        {
             get
             {
                 try
                 {
-                    string status = ResponseXml.GetElementsByTagName("subsonic-response")[0].Attributes["status"].Value;
-                    return ResponseXml == null ? string.Empty : status;
+                    return Int32.Parse(Utility.GetElementAttribute(ResponseXml, "element", "code"));
                 }
                 catch
                 {
                     return null;
                 }
-
             }
         }
+        
 
-        public XmlDocument ResponseXml { get; protected set; }
-
-        public string ResponseString
+        public string ErrorMessage
         {
-            get
-            {
-                return ResponseXml == null ? string.Empty : ResponseXml.ToString();
-            }
-        }
-
-        public int? GetErrorCode()
-        {
-            try
-            {
-                return Int32.Parse(ResponseXml.GetElementsByTagName("error")[0].Attributes["code"].InnerText);
-            }
-            catch
-            {
-                return null;
-            }
-        }
-
-        public string GetErrorMessage(int errorCode = NO_ERROR)
-        {
-            try
-            {
-                return ResponseXml.GetElementsByTagName("error")[0].Attributes["message"].InnerText;
-            }
-            catch
-            {
-                return null;
-            }
-            
+            get { return Utility.GetElementAttribute(ResponseXml, "error", "message"); }
         }
 
 
