@@ -92,17 +92,17 @@ namespace SharpSub.Data.Tests
         [TestMethod()]
         public void GetAlbumsTest()
         {
-            bool expected = true;
-            bool actual;
-            string serverURL = "bmjones.com:56565/music";
-            string username = "Guest";
-            string password = "notbrett";
-            SubsonicRequest.Login(serverURL, username, password);
+            //bool expected = true;
+            //bool actual;
+            //string serverURL = "bmjones.com:56565";
+            //string username = "Guest";
+            //string password = "notbrett";
+            //SubsonicRequest.Login(serverURL, username, password);
 
-            string albumId = "533a5c4d757369635c4161726f6e2047696c6c65737069655c416e7468656d20536f6e6720283230313129";
-            var albumSongs = SubsonicRequest.GetAlbumSongs(albumId);
-            actual = albumSongs.Count > 0;
-            Assert.AreEqual(expected, actual);
+            
+            //var albumSongs = SubsonicRequest.GetAlbumSongs(album);
+            //actual = albumSongs.Count > 0;
+            //Assert.AreEqual(expected, actual);
         }
 
         /// <summary>
@@ -114,7 +114,7 @@ namespace SharpSub.Data.Tests
             bool expected = true;
             bool actual;
 
-            string serverURL = "bmjones.com:56565/music";
+            string serverURL = "bmjones.com:56565";
             string username = "Guest";
             string password = "notbrett";
             SubsonicRequest.Login(serverURL, username, password);
@@ -131,7 +131,7 @@ namespace SharpSub.Data.Tests
         [TestMethod()]
         public void GetAlbumArtTest()
         {
-            string serverURL = "bmjones.com:56565/music";
+            string serverURL = "bmjones.com:56565";
             string username = "Guest";
             string password = "notbrett";
             SubsonicRequest.Login(serverURL, username, password);
@@ -145,5 +145,44 @@ namespace SharpSub.Data.Tests
             Assert.AreEqual(expected, actual);
         }
 
+
+        /// <summary>
+        ///A test for GetAllAlbums
+        ///</summary>
+        [TestMethod()]
+        public void GetAllAlbumsTest()
+        {
+            if (!Login())
+                return;
+
+            IList<Album> albumList = SubsonicRequest.GetAllAlbums();
+            Assert.AreEqual(true, albumList.Count > 0);
+        }
+
+        internal static bool Login()
+        {
+            string serverURL = "bmjones.com:56565";
+            string username = "Guest";
+            string password = "notbrett";
+            bool loggedIn = SubsonicRequest.Login(serverURL, username, password).Successful;
+
+            return loggedIn;
+        }
+
+        /// <summary>
+        ///A test for GetAllSongs
+        ///</summary>
+        [TestMethod()]
+        public void GetAllSongsTest()
+        {
+            //if (!Login())
+            //    return;
+
+            //DateTime before = DateTime.Now;
+            ////var songList = SubsonicRequest.GetAllSongs();
+            //DateTime after = DateTime.Now;
+            
+            //Assert.AreEqual(true, songList.Count > 0);
+        }
     }
 }

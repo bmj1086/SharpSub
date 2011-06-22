@@ -12,14 +12,15 @@ namespace SharpSub.Data
         {
             try
             {
-                return (from attribute in
-                            (from e in xDocument.Elements().ToList()
-                             where e.Name == elementTag
-                             select e).ToList().FirstOrDefault().Attributes().ToList()
-                        where attribute.Name == attributeName
+                var attributes = (from e in xDocument.Descendants().ToList()
+                                  where e.Name.LocalName == elementTag
+                                  select e).ToList().FirstOrDefault().Attributes().ToList();
+
+                return (from attribute in attributes
+                        where attribute.Name.LocalName == attributeName
                         select attribute).FirstOrDefault().Value;
             }
-            catch (ArgumentNullException)
+            catch
             {
                 return null;
             }
@@ -30,10 +31,10 @@ namespace SharpSub.Data
             try
             {
                 return (from attribute in xElement.Attributes().ToList()
-                        where attribute.Name == attributeName
+                        where attribute.Name.LocalName == attributeName
                         select attribute).FirstOrDefault().Value;
             }
-            catch (ArgumentNullException)
+            catch
             {
                 return null;
             }
@@ -41,9 +42,16 @@ namespace SharpSub.Data
 
         internal static IList<XElement> GetElementsFromDocument(XDocument xDocument, string xmlTag)
         {
-            return (from e in xDocument.Elements()
-                    where e.Name == xmlTag
-                    select e).ToList();
+            try
+            {
+                return (from e in xDocument.Descendants()
+                        where e.Name.LocalName == xmlTag
+                        select e).ToList();
+            }
+            catch
+            {
+                return null;
+            }
         }
     }
 }

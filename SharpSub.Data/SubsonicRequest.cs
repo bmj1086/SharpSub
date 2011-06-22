@@ -7,7 +7,9 @@ using System.Linq;
 using System.Net;
 using System.Security.Authentication;
 using System.Text;
+using System.Threading;
 using System.Xml.Linq;
+using System.Reflection;
 
 namespace SharpSub.Data
 {
@@ -172,14 +174,43 @@ namespace SharpSub.Data
             return (from artistElement in artistElements select new Artist(artistElement)).ToList();
         }
 
-        public static IList<Song> GetAlbumSongs(string albumId)
+        public static IList<Album> GetAllAlbums()
         {
-            Dictionary<string, string> paramaters = new Dictionary<string, string>{{"id", albumId}};
+            return GetArtistList().SelectMany(GetArtistAlbums).ToList();
+        }
+
+        /// <summary>
+        /// Gets all songs on the server. Since this method takes some time to 
+        /// run the methodCallback delegate is optional to get called each
+        /// time an artist is retrieved from the server. An example is creating
+        /// a method to add the artist to a list on the main UI. This prevents
+        /// the UI from locking while retrieving artists.
+        /// </summary>
+        /// <param name="methodCallback"></param>
+        /// <returns></returns>
+        public static IList<Song> GetAllSongs(Action<Song> methodCallback)
+        {
+            if (methodCallback == null) 
+                throw new ArgumentNullException("methodCallback");
+
+            var songs = new List<Song>();
+            foreach (Song song in GetAllAlbums().SelectMany(GetAlbumSongs))
+            {
+                songs.Add(song);
+                methodCallback(song);
+            }
+            return songs;
+        }
+
+        public static IList<Song> GetAlbumSongs(Album album)
+        {
+            Dictionary<string, string> paramaters = new Dictionary<string, string>{{"id", album.ID}};
             string url = BuildRequestURL(RequestType.getMusicDirectory, paramaters);
             var response = SendRequest(url);
-            
+
             if (!response.Successful)
-                throw new Exception(String.Format("Error returned from Subsonic server: {0}", response.ErrorMessage));
+                throw new SubsonicException(response);
+            //throw new Exception(String.Format("Error returned from Subsonic server: {0}", response.ErrorMessage));
 
             IList<XElement> songElements = Utility.GetElementsFromDocument(response.ResponseXml, SongXMLTag);
             return (from songElement in songElements select new Song(songElement)).ToList();

@@ -71,10 +71,8 @@ namespace SharpSub.Data.Tests
         [TestMethod()]
         public void MP3ConstructorTest()
         {
-            string serverURL = "bmjones.com:56565/music";
-            string username = "Guest";
-            string password = "notbrett";
-            bool logedIn = SubsonicRequest.Login(serverURL, username, password).Successful;
+            if (!SubsonicRequestTest.Login())
+                throw new Exception("Not logged in");
 
             Random random = new Random();
             var artistList = SubsonicRequest.GetArtistList();
@@ -82,7 +80,7 @@ namespace SharpSub.Data.Tests
             //var artist = SubsonicRequest.GetArtistList().First();
 
             Album album = SubsonicRequest.GetArtistAlbums(artist).First();
-            Song song = SubsonicRequest.GetAlbumSongs(album.ID).First();
+            Song song = SubsonicRequest.GetAlbumSongs(album).First();
 
             Mp3Player player = new Mp3Player(song);
             Assert.AreEqual(true, player.PlaybackState == PlaybackState.Stopped);
