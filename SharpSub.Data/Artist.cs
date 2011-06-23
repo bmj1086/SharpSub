@@ -8,6 +8,7 @@ namespace SharpSub.Data
         public readonly XElement _itemElement;
         public string ID { get; protected set; }
         public string Name { get; protected set; }
+        internal const string XmlTag = "artist";
         
         public Artist(XElement itemElement)
         {

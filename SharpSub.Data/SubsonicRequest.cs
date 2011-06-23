@@ -20,9 +20,6 @@ namespace SharpSub.Data
         public static string Username { get; set; }
         private static string Password { get; set; }
         private const string NOT_CONNECTED_MESSAGE = "The server is not connected. Use the Login method first.";
-        private const string SongXMLTag = "child";
-        private const string AlbumXMLTag = "child";
-        private const string ArtistXMLTag = "artist";
         private const string API_VERSION = "1.5.0";
         private const string APP_NAME = "SharpSub";
 
@@ -170,7 +167,7 @@ namespace SharpSub.Data
             if (!response.Successful)
                 throw new Exception(String.Format("Error returned from Subsonic server : {0}", response.ErrorMessage));
 
-            IList<XElement> artistElements = Utility.GetElementsFromDocument(response.ResponseXml, ArtistXMLTag);
+            IList<XElement> artistElements = Utility.GetElementsFromDocument(response.ResponseXml, Artist.XmlTag);
             return (from artistElement in artistElements select new Artist(artistElement)).ToList();
         }
 
@@ -212,7 +209,7 @@ namespace SharpSub.Data
                 throw new SubsonicException(response);
             //throw new Exception(String.Format("Error returned from Subsonic server: {0}", response.ErrorMessage));
 
-            IList<XElement> songElements = Utility.GetElementsFromDocument(response.ResponseXml, SongXMLTag);
+            IList<XElement> songElements = Utility.GetElementsFromDocument(response.ResponseXml, Song.XmlTag);
             return (from songElement in songElements select new Song(songElement)).ToList();
         }
 
@@ -226,7 +223,7 @@ namespace SharpSub.Data
             if (!response.Successful)
                 throw new Exception(String.Format("Error returned from Subsonic server :{0}", response.ErrorMessage));
 
-            IList<XElement> albumElements = Utility.GetElementsFromDocument(response.ResponseXml, AlbumXMLTag);
+            IList<XElement> albumElements = Utility.GetElementsFromDocument(response.ResponseXml, Album.XmlTag);
             return (from albumElement in albumElements select new Album(albumElement)).ToList();
         }
 

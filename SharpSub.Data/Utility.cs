@@ -40,12 +40,24 @@ namespace SharpSub.Data
             }
         }
 
-        internal static IList<XElement> GetElementsFromDocument(XDocument xDocument, string xmlTag)
+        /// <summary>
+        /// Gets a list of XElements from an XDocument
+        /// </summary>
+        /// <param name="xDocument">The XDocument to parse</param>
+        /// <param name="xmlTag">The xml tag of the XElement to find</param>
+        /// <param name="parent">If specified, returns XElements matching the xmltag only in the specified parent</param>
+        /// <returns></returns>
+        internal static IList<XElement> GetElementsFromDocument(XDocument xDocument, string xmlTag, string parent = null)
         {
             try
             {
+                if (parent == null)
+                    return (from e in xDocument.Descendants()
+                            where e.Name.LocalName == xmlTag
+                            select e).ToList();
+
                 return (from e in xDocument.Descendants()
-                        where e.Name.LocalName == xmlTag
+                        where e.Name.LocalName == xmlTag && e.Parent.Name == parent
                         select e).ToList();
             }
             catch

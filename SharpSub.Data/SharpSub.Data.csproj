@@ -65,6 +65,7 @@
   <ItemGroup>
     <Compile Include="Album.cs" />
     <Compile Include="Artist.cs" />
+    <Compile Include="Cache.cs" />
     <Compile Include="Playback.cs" />
     <Compile Include="LastFm.cs" />
     <Compile Include="Mp3Player.cs" />

@@ -7,6 +7,8 @@ namespace SharpSub.Data
     public class Song
     {
         private readonly XElement _itemElement;
+        internal const string XmlTag = "child";
+        
         
         public Song(XElement itemElement)
         {

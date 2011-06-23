@@ -7,6 +7,8 @@ namespace SharpSub.Data
 {
     public class Album
     {
+        internal const string XmlTag = "child";
+
         public Album(XElement itemElement)
         {
             _itemElement = itemElement;
