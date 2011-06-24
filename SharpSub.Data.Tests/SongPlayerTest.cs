@@ -1,24 +1,24 @@
-﻿using System.IO;
-using System.Linq;
-using NAudio.Wave;
+﻿using System.Linq;
 using SharpSub.Data;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Diagnostics;
+using WMPLib;
 
 namespace SharpSub.Data.Tests
 {
     
     
     /// <summary>
-    ///This is a test class for MP3Test and is intended
-    ///to contain all MP3Test Unit Tests
+    ///This is a test class for SongPlayerTest and is intended
+    ///to contain all SongPlayerTest Unit Tests
     ///</summary>
     [TestClass()]
-    //[Ignore]
-    public class MP3Test
+    public class SongPlayerTest
     {
+
+
         private TestContext testContextInstance;
+
         /// <summary>
         ///Gets or sets the test context which provides
         ///information about and functionality for the current test run.
@@ -67,19 +67,20 @@ namespace SharpSub.Data.Tests
 
 
         /// <summary>
-        ///A test for MP3 Constructor
+        ///A test for Play
         ///</summary>
         [TestMethod()]
-        public void MP3ConstructorTest()
+        public void PlayTest()
         {
-            //if (!SubsonicRequestTest.Login())
-            //    throw new Exception("Not logged in");
+            //SubsonicRequestTest.Login();
 
+            //SongPlayer player = new SongPlayer(); // TODO: Initialize to an appropriate value
             //Song song = SubsonicRequest.GetRandomSongs(1).First();
+            //player.Play(song);
+            //while (true)
+            //{
+            //}
 
-            //Mp3Player player = new Mp3Player(song);
-            //Assert.AreEqual(true, player.PlaybackState == PlaybackState.Stopped);
         }
-
     }
 }

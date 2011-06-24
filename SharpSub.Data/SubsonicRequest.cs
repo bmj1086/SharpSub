@@ -67,7 +67,7 @@ namespace SharpSub.Data
         /// <param name="maxBitRate">If specified, the server will attempt to limit the bitrate to this value, in kilobits per second. If set to zero, no limit is imposed. Legal values are: 0, 32, 40, 48, 56, 64, 80, 96, 112, 128, 160, 192, 224, 256 and 320.</param>
         /// <exception cref="WebException">Thrown when the user is not logged in. This should be caught by the UI thread.</exception>
         /// <returns>MP3 Stream</returns>
-        public static Stream GetSongStream(Song song, int maxBitRate = 0)
+        public static Stream GetSongStream(Song song, int maxBitRate = 0/*, string format = null*/)
         {
             if (!Connected)
                 throw new InvalidCredentialException(NOT_CONNECTED_MESSAGE);
@@ -83,6 +83,8 @@ namespace SharpSub.Data
                                     {"id", song.ID},
                                     {"maxBitRate", maxBitRate.ToString()}
                                  };
+            /*if (!String.IsNullOrEmpty(format))
+                parameters.Add("format", format);*/
 
             string requestURL = BuildRequestURL(RequestType.stream, parameters);
             WebRequest request = WebRequest.Create(requestURL);
@@ -200,7 +202,12 @@ namespace SharpSub.Data
 
         public static IList<Song> GetAlbumSongs(Album album)
         {
-            Dictionary<string, string> paramaters = new Dictionary<string, string> { { "id", album.ID } };
+            return GetAlbumSongs(album.ID);
+        }
+
+        public static IList<Song> GetAlbumSongs(string albumid)
+        {
+            Dictionary<string, string> paramaters = new Dictionary<string, string> { { "id", albumid } };
             string url = BuildRequestURL(RequestType.getMusicDirectory, paramaters);
             var response = SendRequest(url);
 
@@ -211,7 +218,6 @@ namespace SharpSub.Data
             IList<XElement> songElements = Utility.GetElementsFromDocument(response.ResponseXml, Song.XmlTag);
             return (from songElement in songElements select new Song(songElement)).ToList();
         }
-
 
         public static IList<Album> GetArtistAlbums(Artist artist)
         {
@@ -232,13 +238,13 @@ namespace SharpSub.Data
         {
             string coverArtID = String.Empty;
 
+            if (!(albumOrSong is Album) && !(albumOrSong is Song))
+                throw new Exception("albumOrSong must be an instance of an Album or a Song");
             if (albumOrSong is Album)
                 coverArtID = (albumOrSong as Album).CoverArtID;
             if (albumOrSong is Song)
                 coverArtID = (albumOrSong as Song).CoverArtID;
-            if (String.IsNullOrEmpty(coverArtID))
-                throw new Exception("albumOrSong must be an instance of an Album or a Song");
-
+                
             var param = new Dictionary<string, string> { { "id", coverArtID } };
 
             if (size != null)
@@ -258,7 +264,47 @@ namespace SharpSub.Data
             }
 
         }
+
+        /*
+        Parameter	    Required	Default	Comment
+        size	        No	        10	    The maximum number of songs to return. Max 500.
+        genre	        No		            Only returns songs belonging to this genre.
+        fromYear	    No		            Only return songs published after or in this year.
+        toYear	        No		            Only return songs published before or in this year.
+        musicFolderId	No		            Only return songs in the music folder with the given ID. See getMusicFolders.
+         */
+        public static IEnumerable<Song> GetRandomSongs(int? size = null, string genre = null, int? fromYear = null, int? toYear = null)
+        {
+            Dictionary<string, string> paramaters = new Dictionary<string, string>();
+            if (size != null)
+                paramaters.Add("size", size.ToString());
+            if (genre != null)
+                paramaters.Add("size", genre.ToString());
+            if (fromYear != null)
+                paramaters.Add("size", fromYear.ToString());
+            if (toYear != null)
+                paramaters.Add("size", toYear.ToString());
+
+
+            string url = BuildRequestURL(RequestType.getRandomSongs, paramaters);
+            SubsonicResponse response = SendRequest(url);
+
+            if (!response.Successful)
+                throw new SubsonicException(response);
+
+            IList<XElement> songElements = Utility.GetElementsFromDocument(response.ResponseXml, "song");
+            return (from songElement in songElements select new Song(songElement)).ToList();
+        }
+
+        internal static string GetSongUrl(Song song)
+        {
+            Dictionary<string, string> parameters = new Dictionary<string, string>();
+            parameters.Add("id", song.ID);
+            return BuildRequestURL(RequestType.stream, parameters);
+        }
     }
+
+    
 
     /// <summary>
     /// Type of request to send to the server. This is a list of APIs available

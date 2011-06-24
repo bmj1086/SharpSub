@@ -14,6 +14,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpSub.Data.Tests", "Shar
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{C8EF7DE8-D6F5-4DD3-9DBD-A8871F1016D6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UITEST", "UITEST\UITEST.csproj", "{A5113CEA-BFF3-4FD7-A9E7-777EA8A60846}"
+EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = SharpSub.vsmdi
@@ -47,6 +49,16 @@ Global
 		{6989D3D4-33DE-4652-A932-1DCB6AE2C703}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{6989D3D4-33DE-4652-A932-1DCB6AE2C703}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{6989D3D4-33DE-4652-A932-1DCB6AE2C703}.Release|x86.ActiveCfg = Release|Any CPU
+		{A5113CEA-BFF3-4FD7-A9E7-777EA8A60846}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{A5113CEA-BFF3-4FD7-A9E7-777EA8A60846}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{A5113CEA-BFF3-4FD7-A9E7-777EA8A60846}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{A5113CEA-BFF3-4FD7-A9E7-777EA8A60846}.Debug|x86.ActiveCfg = Debug|x86
+		{A5113CEA-BFF3-4FD7-A9E7-777EA8A60846}.Debug|x86.Build.0 = Debug|x86
+		{A5113CEA-BFF3-4FD7-A9E7-777EA8A60846}.Release|Any CPU.ActiveCfg = Release|x86
+		{A5113CEA-BFF3-4FD7-A9E7-777EA8A60846}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{A5113CEA-BFF3-4FD7-A9E7-777EA8A60846}.Release|Mixed Platforms.Build.0 = Release|x86
+		{A5113CEA-BFF3-4FD7-A9E7-777EA8A60846}.Release|x86.ActiveCfg = Release|x86
+		{A5113CEA-BFF3-4FD7-A9E7-777EA8A60846}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

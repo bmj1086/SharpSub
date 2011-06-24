@@ -13,13 +13,12 @@ namespace SharpSub.Data
         {
             _itemElement = itemElement;
 
-            ID = Utility.GetElementAttribute(itemElement, Attribute.ID.ToString().ToLower());
-            CoverArtID = Utility.GetElementAttribute(itemElement, Attribute.CoverArt.ToString().ToLower());
-            Parent = Utility.GetElementAttribute(itemElement, Attribute.Parent.ToString().ToLower());
-            Title = Utility.GetElementAttribute(itemElement, Attribute.Title.ToString().ToLower());
-            IsDir = Convert.ToBoolean(Utility.GetElementAttribute(itemElement, Attribute.IsDir.ToString().ToLower()));
-            Artist = Utility.GetElementAttribute(itemElement, Attribute.Artist.ToString().ToLower());
-        }
+            ID = Utility.GetElementAttribute(itemElement, Attribute.ID.ToString());
+            CoverArtID = Utility.GetElementAttribute(itemElement, Attribute.CoverArt.ToString());
+            Parent = Utility.GetElementAttribute(itemElement, Attribute.Parent.ToString());
+            Title = Utility.GetElementAttribute(itemElement, Attribute.Title.ToString());
+            IsDir = Convert.ToBoolean(Utility.GetElementAttribute(itemElement, Attribute.IsDir.ToString()));
+            Artist = Utility.GetElementAttribute(itemElement, Attribute.Artist.ToString());}
 
         public enum Attribute
         {

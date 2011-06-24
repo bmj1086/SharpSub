@@ -14,8 +14,8 @@ namespace SharpSub.Data
         {
             _itemElement = itemElement;
 
-            ID = Utility.GetElementAttribute(_itemElement, Attribute.ID.ToString().ToLower());
-            Name = Utility.GetElementAttribute(_itemElement, Attribute.Name.ToString().ToLower());
+            ID = Utility.GetElementAttribute(_itemElement, Attribute.ID.ToString());
+            Name = Utility.GetElementAttribute(_itemElement, Attribute.Name.ToString());
         }
 
         private enum Attribute

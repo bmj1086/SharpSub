@@ -13,11 +13,11 @@ namespace SharpSub.Data
             try
             {
                 var attributes = (from e in xDocument.Descendants().ToList()
-                                  where e.Name.LocalName == elementTag
+                                  where e.Name.LocalName.ToLower() == elementTag
                                   select e).ToList().FirstOrDefault().Attributes().ToList();
 
                 return (from attribute in attributes
-                        where attribute.Name.LocalName == attributeName
+                        where attribute.Name.LocalName.ToLower() == attributeName
                         select attribute).FirstOrDefault().Value;
             }
             catch
@@ -31,7 +31,7 @@ namespace SharpSub.Data
             try
             {
                 return (from attribute in xElement.Attributes().ToList()
-                        where attribute.Name.LocalName == attributeName
+                        where attribute.Name.LocalName.ToLower().ToLower() == attributeName.ToLower()
                         select attribute).FirstOrDefault().Value;
             }
             catch
@@ -53,11 +53,11 @@ namespace SharpSub.Data
             {
                 if (parent == null)
                     return (from e in xDocument.Descendants()
-                            where e.Name.LocalName == xmlTag
+                            where e.Name.LocalName.ToLower() == xmlTag
                             select e).ToList();
 
                 return (from e in xDocument.Descendants()
-                        where e.Name.LocalName == xmlTag && e.Parent.Name == parent
+                        where e.Name.LocalName.ToLower() == xmlTag && e.Parent.Name == parent
                         select e).ToList();
             }
             catch

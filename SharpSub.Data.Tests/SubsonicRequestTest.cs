@@ -161,7 +161,7 @@ namespace SharpSub.Data.Tests
 
         internal static bool Login()
         {
-            string serverURL = "bmjones.com:56565";
+            string serverURL = "bmjones.com";
             string username = "Guest";
             string password = "notbrett";
             bool loggedIn = SubsonicRequest.Login(serverURL, username, password).Successful;
