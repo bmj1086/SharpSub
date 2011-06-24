@@ -1,4 +1,5 @@
-﻿using System.Xml;
+﻿using System.Drawing;
+using System.Xml;
 using System;
 using System.Xml.Linq;
 
@@ -29,7 +30,7 @@ namespace SharpSub.Data
             Suffix = Utility.GetElementAttribute(_itemElement, Attribute.Suffix.ToString().ToLower());
             ContentType = Utility.GetElementAttribute(_itemElement, Attribute.ContentType.ToString().ToLower());
             IsVideo = Convert.ToBoolean(Utility.GetElementAttribute(_itemElement, Attribute.IsVideo.ToString().ToLower()));
-            CoverArt = Utility.GetElementAttribute(_itemElement, Attribute.CoverArt.ToString().ToLower());
+            CoverArtID = Utility.GetElementAttribute(_itemElement, Attribute.CoverArt.ToString().ToLower());
             Path = Utility.GetElementAttribute(_itemElement, Attribute.Path.ToString().ToLower());
         }
 
@@ -60,9 +61,12 @@ namespace SharpSub.Data
         public string Suffix { get; protected set; }
         public string ContentType { get; protected set; }
         public bool? IsVideo { get; protected set; }
-        public string CoverArt { get; protected set; }
+        public string CoverArtID { get; protected set; }
         public string Path { get; protected set; }
 
-        
+        public Bitmap CoverArt(int? size = null)
+        {
+            return SubsonicRequest.GetAlbumArt(this, size);
+        }
     }
 }

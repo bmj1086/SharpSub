@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Configuration;
 using System.Drawing;
 using System.IO;
@@ -8,6 +9,8 @@ using System.Net;
 using System.Security.Authentication;
 using System.Text;
 using System.Threading;
+using System.Web.UI;
+using System.Windows.Forms;
 using System.Xml.Linq;
 using System.Reflection;
 
@@ -23,8 +26,7 @@ namespace SharpSub.Data
         private const string API_VERSION = "1.5.0";
         private const string APP_NAME = "SharpSub";
 
-        private static readonly List<int> AllowedBitrates = new List<int> 
-            {0, 32, 40, 48, 56, 64, 80, 96, 112, 128, 160, 192, 224, 256, 320};
+        private static readonly List<int> AllowedBitrates = new List<int> { 0, 32, 40, 48, 56, 64, 80, 96, 112, 128, 160, 192, 224, 256, 320 };
 
         /// <summary>
         /// If successful, sets the Connected property to true and allows
@@ -37,7 +39,7 @@ namespace SharpSub.Data
         public static SubsonicResponse Login(string serverURL, string username, string password)
         {
             ServerURL = serverURL;
-            Username = username; 
+            Username = username;
             Password = EncodePassword(password);
             Connected = true;
 
@@ -46,7 +48,7 @@ namespace SharpSub.Data
 
             if (!response.Successful)
                 Logout();
-            
+
             return response;
 
         }
@@ -69,11 +71,11 @@ namespace SharpSub.Data
         {
             if (!Connected)
                 throw new InvalidCredentialException(NOT_CONNECTED_MESSAGE);
-                
+
 
             if (!SupportedBitRate(maxBitRate))
                 throw new ArgumentOutOfRangeException(
-                    String.Format("This bitrate is not allowed. Allowed bitrates are {0}", 
+                    String.Format("This bitrate is not allowed. Allowed bitrates are {0}",
                                   String.Join(", ", AllowedBitrates)));
 
             var parameters = new Dictionary<string, string>
@@ -127,7 +129,7 @@ namespace SharpSub.Data
         {
             if (!Connected)
                 throw new WebException(NOT_CONNECTED_MESSAGE);
-            
+
             StringBuilder sUrlBuilder = new StringBuilder();
             sUrlBuilder.Append("http://");
             sUrlBuilder.Append(ServerURL);
@@ -138,7 +140,7 @@ namespace SharpSub.Data
             sUrlBuilder.Append(Username);
             sUrlBuilder.Append("&p=enc:");
             sUrlBuilder.Append(Password);
-            
+
             if (additionalParameters != null)
             {
                 foreach (var parameter in additionalParameters)
@@ -178,30 +180,27 @@ namespace SharpSub.Data
 
         /// <summary>
         /// Gets all songs on the server. Since this method takes some time to 
-        /// run the methodCallback delegate is optional to get called each
-        /// time an artist is retrieved from the server. An example is creating
-        /// a method to add the artist to a list on the main UI. This prevents
-        /// the UI from locking while retrieving artists.
+        /// run the methodCallback delegate is called each time an artist is retrieved 
+        /// This prevents the UI from locking while retrieving artists.
         /// </summary>
-        /// <param name="methodCallback"></param>
-        /// <returns></returns>
-        public static IList<Song> GetAllSongs(Action<Song> methodCallback)
+        /// <param name="methodCallback">The delegate to call when an artist is retrieved</param>
+        /// <example>SubsonicRequest.GetAllSongs(song => listBox1.Invoke((MethodInvoker)(()=>listBox1.Items.Add(song))));</example>
+        public static void GetAllSongs(Action<Song> methodCallback)
         {
-            if (methodCallback == null) 
+            if (methodCallback == null)
                 throw new ArgumentNullException("methodCallback");
 
-            var songs = new List<Song>();
-            foreach (Song song in GetAllAlbums().SelectMany(GetAlbumSongs))
-            {
-                songs.Add(song);
-                methodCallback(song);
-            }
-            return songs;
+            ThreadPool.QueueUserWorkItem(delegate { 
+                                foreach (Song song in GetAllAlbums().SelectMany(GetAlbumSongs))
+                                {
+                                    methodCallback(song);
+                                }
+            });
         }
 
         public static IList<Song> GetAlbumSongs(Album album)
         {
-            Dictionary<string, string> paramaters = new Dictionary<string, string>{{"id", album.ID}};
+            Dictionary<string, string> paramaters = new Dictionary<string, string> { { "id", album.ID } };
             string url = BuildRequestURL(RequestType.getMusicDirectory, paramaters);
             var response = SendRequest(url);
 
@@ -213,7 +212,7 @@ namespace SharpSub.Data
             return (from songElement in songElements select new Song(songElement)).ToList();
         }
 
-        
+
         public static IList<Album> GetArtistAlbums(Artist artist)
         {
             Dictionary<string, string> paramaters = new Dictionary<string, string> { { "id", artist.ID } };
@@ -229,10 +228,19 @@ namespace SharpSub.Data
 
 
 
-        internal static Bitmap GetAlbumArt(Album album, int? size = null)
+        internal static Bitmap GetAlbumArt(object albumOrSong, int? size = null)
         {
-            var param = new Dictionary<string, string> { {"id", album.CoverArtID} };
-            
+            string coverArtID = String.Empty;
+
+            if (albumOrSong is Album)
+                coverArtID = (albumOrSong as Album).CoverArtID;
+            if (albumOrSong is Song)
+                coverArtID = (albumOrSong as Song).CoverArtID;
+            if (String.IsNullOrEmpty(coverArtID))
+                throw new Exception("albumOrSong must be an instance of an Album or a Song");
+
+            var param = new Dictionary<string, string> { { "id", coverArtID } };
+
             if (size != null)
                 param.Add("size", size.ToString());
 
@@ -248,7 +256,7 @@ namespace SharpSub.Data
                 //TODO: Write to logger
                 return null;
             }
-            
+
         }
     }
 
@@ -286,5 +294,5 @@ namespace SharpSub.Data
 
     }
 
-    
+
 }

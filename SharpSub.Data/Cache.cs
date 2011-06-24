@@ -11,7 +11,7 @@ namespace SharpSub.Data
 {
     class Cache
     {
-        private readonly string CacheFileName ="ListCacheFile.xml";
+        private static readonly string CacheFileName ="ListCacheFile.xml";
         //private static readonly string AppDirectory = 
 
         internal void CacheArtistList(IEnumerable<Artist> artistList)
@@ -19,26 +19,26 @@ namespace SharpSub.Data
             
         }
 
-        internal void CacheArtistList(string xmlString)
+        static internal void CacheArtistList(string xmlString)
         {
             XDocument cacheFile = CacheDocument() ?? new XDocument();
+            XDocument toCache = XDocument.Parse(xmlString);
 
-            var elems = (from artistElement in cacheFile.Descendants().ToList()
-                         where artistElement.Name.LocalName == Artist.XmlTag
-                         select new Artist(artistElement));
+            var cachedArtists = cacheFile.Descendants().Where(e => e.Name.LocalName == Artist.XmlTag);
 
-            foreach (Artist artist in from artist in elems
-                                      let matchingArtists = cacheFile.Elements().Where(e => Utility.GetElementAttribute(e, "id") == artist.ID).ToList()
-                                      where matchingArtists.Count == 0
-                                      select artist)
+            var toAdd = (from artist in toCache.Descendants().Where(e => e.Name.LocalName == Artist.XmlTag)
+                         where !cachedArtists.Contains(artist)
+                         select artist).ToList();
+
+            foreach (var xElement in toAdd)
             {
-                cacheFile.Add(artist._itemElement);
+                cacheFile.Add(xElement);
             }
 
-
+            cacheFile.Save(GetCacheFilePath());
         }
 
-        private XDocument CacheDocument()
+        static private XDocument CacheDocument()
         {
             string filePath = GetCacheFilePath();
 
@@ -62,7 +62,7 @@ namespace SharpSub.Data
                 ConfigurationManager.AppSettings["AppName"]);
         }
 
-        private string GetCacheFilePath()
+        static private string GetCacheFilePath()
         {
             string path = Path.Combine(GetAppDirectory(), CacheFileName);
             return File.Exists(path) ? path : null;

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<subsonic-response xmlns="http://subsonic.org/restapi" status="ok" version="1.5.0"> 
+  <indexes lastModified="1308893824922"> 
+    <index name="A"> 
+      <artist name="Aaron Gillespie" id="2f6d656469612f53747566662f4d757369632f4161726f6e2047696c6c6573706965"/> 
+      <artist name="The Almost" id="2f6d656469612f53747566662f4d757369632f54686520416c6d6f7374"/> 
+      <artist name="Animals As Leaders" id="2f6d656469612f53747566662f4d757369632f416e696d616c73204173204c656164657273"/> 
+      <artist name="Anullaby" id="2f6d656469612f53747566662f4d757369632f416e756c6c616279"/> 
+      <artist name="Armor for Sleep" id="2f6d656469612f53747566662f4d757369632f41726d6f7220666f7220536c656570"/> 
+      <artist name="As Cities Burn" id="2f6d656469612f53747566662f4d757369632f417320436974696573204275726e"/> 
+      <artist name="As I Lay Dying" id="2f6d656469612f53747566662f4d757369632f41732049204c6179204479696e67"/> 
+      <artist name="August Burns Red" id="2f6d656469612f53747566662f4d757369632f417567757374204275726e7320526564"/> 
+    </index> 
+    <index name="C"> 
+      <artist name="Chevelle" id="2f6d656469612f53747566662f4d757369632f43686576656c6c65"/> 
+      <artist name="Copeland" id="2f6d656469612f53747566662f4d757369632f436f70656c616e64"/> 
+    </index> 
+    <index name="D"> 
+      <artist name="Dashboard Confessional" id="2f6d656469612f53747566662f4d757369632f44617368626f61726420436f6e66657373696f6e616c"/> 
+      <artist name="Dead Poetic" id="2f6d656469612f53747566662f4d757369632f4465616420506f65746963"/> 
+      <artist name="Death Cab For Cutie" id="2f6d656469612f53747566662f4d757369632f44656174682043616220466f72204375746965"/> 
+      <artist name="The Devil Wears Prada" id="2f6d656469612f53747566662f4d757369632f54686520446576696c205765617273205072616461"/> 
+    </index> 
+    <index name="E"> 
+      <artist name="The Early November" id="2f6d656469612f53747566662f4d757369632f546865204561726c79204e6f76656d626572"/> 
+      <artist name="Emery" id="2f6d656469612f53747566662f4d757369632f456d657279"/> 
+    </index> 
+    <index name="F"> 
+      <artist name="The Fray" id="2f6d656469612f53747566662f4d757369632f5468652046726179"/> 
+    </index> 
+    <index name="G"> 
+      <artist name="Gwen Stacy" id="2f6d656469612f53747566662f4d757369632f4777656e205374616379"/> 
+    </index> 
+    <index name="H"> 
+      <artist name="Hawkboy" id="2f6d656469612f53747566662f4d757369632f4861776b626f79"/> 
+      <artist name="The Human Abstract" id="2f6d656469612f53747566662f4d757369632f5468652048756d616e204162737472616374"/> 
+    </index> 
+    <index name="I"> 
+      <artist name="I The Breather" id="2f6d656469612f53747566662f4d757369632f4920546865204272656174686572"/> 
+      <artist name="Incubus" id="2f6d656469612f53747566662f4d757369632f496e6375627573"/> 
+      <artist name="Inhale Exhale" id="2f6d656469612f53747566662f4d757369632f496e68616c6520457868616c65"/> 
+    </index> 
+    <index name="M"> 
+      <artist name="Memphis May Fire" id="2f6d656469612f53747566662f4d757369632f4d656d70686973204d61792046697265"/> 
+    </index> 
+    <index name="N"> 
+      <artist name="Norma Jean" id="2f6d656469612f53747566662f4d757369632f4e6f726d61204a65616e"/> 
+    </index> 
+    <index name="O"> 
+      <artist name="Oh, Sleeper" id="2f6d656469612f53747566662f4d757369632f4f682c20536c6565706572"/> 
+    </index> 
+    <index name="P"> 
+      <artist name="The Postal Service" id="2f6d656469612f53747566662f4d757369632f54686520506f7374616c2053657276696365"/> 
+    </index> 
+    <index name="S"> 
+      <artist name="Saosin" id="2f6d656469612f53747566662f4d757369632f53616f73696e"/> 
+      <artist name="Scary Kids Scaring Kids" id="2f6d656469612f53747566662f4d757369632f5363617279204b6964732053636172696e67204b696473"/> 
+      <artist name="Secondhand Serenade" id="2f6d656469612f53747566662f4d757369632f5365636f6e6468616e6420536572656e616465"/> 
+      <artist name="Silverstein" id="2f6d656469612f53747566662f4d757369632f53696c766572737465696e"/> 
+      <artist name="Snow Patrol" id="2f6d656469612f53747566662f4d757369632f536e6f7720506174726f6c"/> 
+    </index> 
+    <index name="T"> 
+      <artist name="There For Tomorrow" id="2f6d656469612f53747566662f4d757369632f546865726520466f7220546f6d6f72726f77"/> 
+    </index> 
+    <index name="U"> 
+      <artist name="Underoath" id="2f6d656469612f53747566662f4d757369632f556e6465726f617468"/> 
+    </index> 
+  </indexes> 
+</subsonic-response> 
