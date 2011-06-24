@@ -6,7 +6,7 @@ using WMPLib;
 
 namespace SharpSub.Data
 {
-    public class SongPlayer
+    public class SongPlayer : IDisposable
     {
         public WindowsMediaPlayer player = new WindowsMediaPlayer();
         public WMPPlayState PlaybackState = WMPPlayState.wmppsStopped;
@@ -65,5 +65,11 @@ namespace SharpSub.Data
                 player.controls.play();
         }
 
+
+        public void Dispose()
+        {
+            player.controls.stop();
+            player = null;
+        }
     }
 }

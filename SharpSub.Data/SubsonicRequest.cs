@@ -192,12 +192,24 @@ namespace SharpSub.Data
             if (methodCallback == null)
                 throw new ArgumentNullException("methodCallback");
 
-            ThreadPool.QueueUserWorkItem(delegate { 
-                                foreach (Song song in GetAllAlbums().SelectMany(GetAlbumSongs))
-                                {
-                                    methodCallback(song);
-                                }
+            ThreadPool.QueueUserWorkItem(delegate
+            {
+                foreach (Song song in GetAllSongs())
+                {
+                    methodCallback(song);
+                }
             });
+        }
+
+        /// <summary>
+        /// This method takes a long time to run until a method is implemented into the API.
+        /// I highly suggest that you either use the GetAllSongs(methodCallback) method or 
+        /// run this in a separate thread from the UI.
+        /// </summary>
+        /// <returns></returns>
+        public static IEnumerable<Song> GetAllSongs()
+        {
+            return GetAllAlbums().SelectMany(GetAlbumSongs);
         }
 
         public static IList<Song> GetAlbumSongs(Album album)
@@ -213,7 +225,6 @@ namespace SharpSub.Data
 
             if (!response.Successful)
                 throw new SubsonicException(response);
-            //throw new Exception(String.Format("Error returned from Subsonic server: {0}", response.ErrorMessage));
 
             IList<XElement> songElements = Utility.GetElementsFromDocument(response.ResponseXml, Song.XmlTag);
             return (from songElement in songElements select new Song(songElement)).ToList();
@@ -244,7 +255,7 @@ namespace SharpSub.Data
                 coverArtID = (albumOrSong as Album).CoverArtID;
             if (albumOrSong is Song)
                 coverArtID = (albumOrSong as Song).CoverArtID;
-                
+
             var param = new Dictionary<string, string> { { "id", coverArtID } };
 
             if (size != null)
@@ -304,7 +315,7 @@ namespace SharpSub.Data
         }
     }
 
-    
+
 
     /// <summary>
     /// Type of request to send to the server. This is a list of APIs available
