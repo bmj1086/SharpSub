@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Xml;
 using System.Configuration;
@@ -55,40 +56,38 @@ namespace SharpSub.Data
         public class ArtistInfo
         {
             public IList<string> Tags { get; protected set; }
-            public string Summary { get; protected set; }
-            private readonly XmlDocument xmlDocument = null;
-            private readonly string rawXml;
-
+            private readonly XDocument xmlDocument = null;
+            
             public ArtistInfo(Stream xmlstream)
             {
                 StreamReader reader = new StreamReader(xmlstream);
-                xmlDocument = new XmlDocument();
-                xmlDocument.LoadXml(reader.ReadToEnd());
+                xmlDocument = XDocument.Parse(reader.ReadToEnd());
+            }
+
+            public string Summary()
+            {
+                string rawBio =  xmlDocument.Elements().First().Elements().
+                    Where(e => e.Name.LocalName == "artist").Elements().
+                    Where(e => e.Name.LocalName == "bio").Elements().
+                    Where(e => e.Name.LocalName == "summary").FirstOrDefault().Value;
+
+                return Regex.Replace(rawBio, "<.*?>", string.Empty).Trim();
+                
             }
 
             public Bitmap Image(ImageSize imageSize)
             {
                 try
                 {
-                    var imageElements = xmlDocument.GetElementsByTagName("image");
-                    string imageUrl = String.Empty;
-                    foreach (XmlElement xmlElement in imageElements)
-                    {
-                        var tmp = xmlElement.Attributes["size"].InnerText;
-                        //TODO: Left off here
-                        if (tmp == imageSize.ToString().ToLower())
-                        {
-                            imageUrl = xmlElement.InnerText;
-                        }
-                    }
+                    var imageElements = xmlDocument.Elements().First().Elements().Where(e => e.Name.LocalName == "artist").Elements().Where(e => e.Name.LocalName == "image");
+                    string imageUrl = null;
 
-                    //var imageUrl = (from a in imageElements.Attmp.;tes()
-                    //                where (a.Name.LocalName == "size") && (a.Value == imageSize.ToString().ToLower())
-                    //                select a).ToList().FirstOrDefault().Value.ToString();
-
-                    //string imageUrl = imageElements.Where(
-                    //                    imageElement => imageElement.Attributes["size"].InnerText == imageSize.ToString().ToLower()).
-                    //                        FirstOrDefault().InnerText;
+                    imageUrl = (from imageElement in imageElements
+                                from xAttribute in
+                                    imageElement.Attributes().Where(xAttribute => xAttribute.Name.LocalName == "size").
+                                    Where(xAttribute => xAttribute.Value == imageSize.ToString().ToLower())
+                                select imageElement.Value).FirstOrDefault();
+                    
 
                     WebRequest request = WebRequest.Create(imageUrl);
                     Stream responseStream = request.GetResponse().GetResponseStream();
