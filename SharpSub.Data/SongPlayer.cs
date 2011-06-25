@@ -8,8 +8,22 @@ namespace SharpSub.Data
 {
     public class SongPlayer : IDisposable
     {
-        public WindowsMediaPlayer player = new WindowsMediaPlayer();
+        private WindowsMediaPlayer player = new WindowsMediaPlayer();
         public WMPPlayState PlaybackState = WMPPlayState.wmppsStopped;
+        public Song CurrentSong;
+
+        public SongPlayer(Song song)
+        {
+            CurrentSong = song;
+            player.URL = song.Url;
+            player.PlayStateChange += PlayerPlayStateChange;
+        }
+
+        static void PlayerMediaError(object pMediaObject)
+        {
+            
+        }
+        
         public int Volume
         {
             get { return player.settings.volume; }
@@ -20,15 +34,24 @@ namespace SharpSub.Data
             get { return player.controls.currentPosition; }
             set { player.controls.currentPosition = value; }
         }
+        public string PositionString(string format = "mm:ss")
+        {
+            return ToTimeFormat((int) Position, format);
+        }
         public bool Mute
         {
             get { return player.settings.mute; }
             set { player.settings.mute = value; }
         }
-
-        public string DurationString
+        public string DurationString(string format = "mm:ss")
         {
-            get { return player.currentMedia.durationString; }
+            return ToTimeFormat((int) CurrentSong.Duration, format);
+        }
+
+        private string ToTimeFormat(int seconds, string format)
+        {
+            DateTime dt = DateTime.MinValue.AddSeconds(seconds);
+            return dt.ToString("m:ss");
         }
 
         public void Play()
@@ -36,15 +59,10 @@ namespace SharpSub.Data
             player.controls.play();
         }
 
-        public SongPlayer(Song song)
-        {
-            player.URL = song.Url;
-            player.PlayStateChange += player_PlayStateChange;
-        }
 
-        void player_PlayStateChange(int NewState)
+        void PlayerPlayStateChange(int newState)
         {
-            PlaybackState = (WMPPlayState) NewState;
+            PlaybackState = (WMPPlayState) newState;
         }
 
         public void Stop()

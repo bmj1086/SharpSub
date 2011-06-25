@@ -71,8 +71,12 @@ namespace SharpSub.Data
                     Where(e => e.Name.LocalName == "bio").Elements().
                     Where(e => e.Name.LocalName == "summary").FirstOrDefault().Value;
 
-                return Regex.Replace(rawBio, "<.*?>", string.Empty).Trim();
-                
+                return Regex.Replace(rawBio, "<.*?>", string.Empty).Replace("&quot;", "\"").Trim();
+            }
+
+            public string LastFmUrl()
+            {
+                return xmlDocument.Elements().First().Elements().Where(e => e.Name.LocalName == "artist").Elements().Where(e => e.Name.LocalName == "url").First().Value;
             }
 
             public Bitmap Image(ImageSize imageSize)
