@@ -66,8 +66,8 @@
   <ItemGroup>
     <Compile Include="Album.cs" />
     <Compile Include="Artist.cs" />
+    <Compile Include="ArtistInfo.cs" />
     <Compile Include="Cache.cs" />
-    <Compile Include="NotWorking.cs" />
     <Compile Include="Playback.cs" />
     <Compile Include="LastFm.cs" />
     <Compile Include="Mp3Player.cs" />
@@ -81,6 +81,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="SimilarArtist.cs" />
     <Compile Include="SongPlayer.cs" />
     <Compile Include="SubsonicException.cs" />
     <Compile Include="SubsonicResponse.cs" />

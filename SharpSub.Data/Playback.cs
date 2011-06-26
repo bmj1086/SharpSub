@@ -1,105 +1,89 @@
-﻿//using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using System.Text;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
-//namespace SharpSub.Data
-//{
-//    public static class Playback
-//    {
-//        private static IList<Song> _currentPlaylist;
-//        private static IList<int> _playedSongs;
-//        private static int CurrentSongIndex;
-//        public static bool RandomPlay { get; set; }
-//        private static Song _currentSong;
-//        private static Mp3Player mp3player;
-//        private static Random random = new Random();
+namespace SharpSub.Data
+{
+    public static class Playback
+    {
+        private static List<Song> currentPlaylist;
+        private static List<int> playedSongs;
+        private static int CurrentSongIndex;
+        public static bool RandomPlayback { get; set; }
+        private static Song currentSong;
+        private static SongPlayer player;
+        private static readonly Random random = new Random();
 
-//        private static void StartNew(Song song)
-//        {
-//            _currentSong = song;
+        private static void StartNew(Song song)
+        {
+            currentSong = song;
 
-//            if (mp3player != null)
-//                mp3player.StopAndDispose();
+            if (player != null)
+                player.Dispose();
 
-//            mp3player = new Mp3Player(_currentSong);
-//            mp3player.Play();
-//        }
+            player = new SongPlayer(currentSong);
+            player.Play();
+        }
 
-//        /// <summary>
-//        /// Use to play a song already in the current playlist
-//        /// </summary>
-//        /// <param name="playlistIndex">The index position in the current playlist of the song to play</param>
-//        /// <param name="restart">If the song is currently playing and you want to restart it set this to true</param>
-//        public static void Play(int? playlistIndex = null)
-//        {
-//            if (mp3player != null)
-//                mp3player.StopAndDispose();
+        /// <summary>
+        /// Use to play a song already in the current playlist
+        /// </summary>
+        /// <param name="playlistIndex">The index position in the current playlist of the song to play</param>
+        /// <param name="restart">If the song is currently playing and you want to restart it set this to true</param>
+        public static void Play(int? playlistIndex = null)
+        {
+            if (player != null)
+                player.Dispose();
 
 
-//        }
+        }
 
-//        /// <summary>
-//        /// Pause the currently playing song.
-//        /// </summary>
-//        public static void Pause()
-//        {
-            
-//        }
+        /// <summary>
+        /// Pause the currently playing song.
+        /// </summary>
+        public static void Pause()
+        {
 
-//        /// <summary>
-//        /// Add song(s) to the current playlist
-//        /// </summary>
-//        /// <param name="songList">The list of songs to add to the playlist.</param>
-//        /// <param name="startPlayback">Set to true if you want the playlist to start playing immediately.</param>
-//        /// <param name="randomPlay">Set to true if the user wants random playback.</param>
-//        public static void Add(IEnumerable<Song> songList, bool startPlayback, bool randomPlay = false)
-//        {
-//            foreach (Song song in songList)
-//            {
-//                _currentPlaylist.Add(song);
-//            }
+        }
 
-//            RandomPlay = randomPlay;
-//            CurrentSongIndex = 0;
+        /// <summary>
+        /// Add song(s) to the current playlist
+        /// </summary>
+        /// <param name="songList">The list of songs to add to the playlist.</param>
+        /// <param name="startPlayback">Set to true if you want the playlist to start playing immediately.</param>
+        /// <param name="randomPlay">Set to true if the user wants random playback.</param>
+        public static void Add(IEnumerable<Song> songList, bool startPlayback, bool randomPlay = false)
+        {
+            foreach (Song song in songList)
+            {
+                currentPlaylist.Add(song);
+            }
 
-//            if (RandomPlay)
-//                CurrentSongIndex = random.Next(_currentPlaylist.Count);
-            
-//            if (startPlayback)
-//                Play(CurrentSongIndex);
-//        }
+            RandomPlayback = randomPlay;
+            CurrentSongIndex = 0;
 
-//        //private static void Randomize()
-//        //{
-//        //    Random r = new Random();
-//        //    var playListList = _currentPlaylist.ToList();
-//        //    var tempPlaylist = new Queue<Song>();
+            if (RandomPlayback)
+                CurrentSongIndex = random.Next(currentPlaylist.Count);
 
-//        //    while (playListList.Count > 0)
-//        //    {
-//        //        int randomInt = r.Next(_currentPlaylist.Count);
-//        //        tempPlaylist.Enqueue(playListList[randomInt]);
-//        //        playListList.RemoveAt(randomInt);
-//        //    }
+            if (startPlayback)
+                Play(CurrentSongIndex);
+        }
 
-//        //    _currentPlaylist = tempPlaylist;
-//        //}
+        public static void Stop()
+        {
+            currentPlaylist.Clear();
+            //TODO: Stop playback
+        }
 
-//        public static void Stop()
-//        {
-//            _currentPlaylist.Clear();
-//            //TODO: Stop playback
-//        }
+        public static IEnumerable<Song> GetPlaylist()
+        {
+            return currentPlaylist.ToList();
+        }
 
-//        public static IList<Song> GetPlaylist()
-//        {
-//            return _currentPlaylist.ToList();
-//        }
-
-//        internal static void SongCompleted()
-//        {
-//            _playedSongs.Add(CurrentSongIndex); //TODO: Add property protected set.
-//        }
-//    }
-//}
+        internal static void SongCompleted()
+        {
+            playedSongs.Add(CurrentSongIndex); //TODO: Add property protected set.
+        }
+    }
+}

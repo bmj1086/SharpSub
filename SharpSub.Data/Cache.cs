@@ -19,7 +19,6 @@ namespace SharpSub.Data
             
         }
 
-        [NotWorking]
         static internal void CacheArtistList(string xmlString)
         {
             XDocument cacheFile = CacheDocument() ?? new XDocument();

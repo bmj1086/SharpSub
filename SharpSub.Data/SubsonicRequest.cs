@@ -163,7 +163,7 @@ namespace SharpSub.Data
 
         }
 
-        public static IList<Artist> GetArtistList()
+        public static IEnumerable<Artist> GetArtistList()
         {
             string requestURL = BuildRequestURL(RequestType.getIndexes);
             var response = SendRequest(requestURL);
@@ -171,11 +171,11 @@ namespace SharpSub.Data
             if (!response.Successful)
                 throw new Exception(String.Format("Error returned from Subsonic server : {0}", response.ErrorMessage));
 
-            IList<XElement> artistElements = Utility.GetElementsFromDocument(response.ResponseXml, Artist.XmlTag);
+            IEnumerable<XElement> artistElements = Utility.GetElementsFromDocument(response.ResponseXml, Artist.XmlTag);
             return (from artistElement in artistElements select new Artist(artistElement)).ToList();
         }
 
-        public static IList<Album> GetAllAlbums()
+        public static IEnumerable<Album> GetAllAlbums()
         {
             return GetArtistList().SelectMany(GetArtistAlbums).ToList();
         }
@@ -212,12 +212,12 @@ namespace SharpSub.Data
             return GetAllAlbums().SelectMany(GetAlbumSongs);
         }
 
-        public static IList<Song> GetAlbumSongs(Album album)
+        public static IEnumerable<Song> GetAlbumSongs(Album album)
         {
             return GetAlbumSongs(album.ID);
         }
 
-        public static IList<Song> GetAlbumSongs(string albumid)
+        public static IEnumerable<Song> GetAlbumSongs(string albumid)
         {
             Dictionary<string, string> paramaters = new Dictionary<string, string> { { "id", albumid } };
             string url = BuildRequestURL(RequestType.getMusicDirectory, paramaters);
@@ -226,11 +226,11 @@ namespace SharpSub.Data
             if (!response.Successful)
                 throw new SubsonicException(response);
 
-            IList<XElement> songElements = Utility.GetElementsFromDocument(response.ResponseXml, Song.XmlTag);
+            IEnumerable<XElement> songElements = Utility.GetElementsFromDocument(response.ResponseXml, Song.XmlTag);
             return (from songElement in songElements select new Song(songElement)).ToList();
         }
 
-        public static IList<Album> GetArtistAlbums(Artist artist)
+        public static IEnumerable<Album> GetArtistAlbums(Artist artist)
         {
             Dictionary<string, string> paramaters = new Dictionary<string, string> { { "id", artist.ID } };
             string url = BuildRequestURL(RequestType.getMusicDirectory, paramaters);
@@ -239,7 +239,7 @@ namespace SharpSub.Data
             if (!response.Successful)
                 throw new Exception(String.Format("Error returned from Subsonic server :{0}", response.ErrorMessage));
 
-            IList<XElement> albumElements = Utility.GetElementsFromDocument(response.ResponseXml, Album.XmlTag);
+            IEnumerable<XElement> albumElements = Utility.GetElementsFromDocument(response.ResponseXml, Album.XmlTag);
             return (from albumElement in albumElements select new Album(albumElement)).ToList();
         }
 
@@ -268,7 +268,7 @@ namespace SharpSub.Data
                 WebResponse response = theRequest.GetResponse();
                 return new Bitmap(response.GetResponseStream());
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 //TODO: Write to logger
                 return null;
@@ -303,7 +303,7 @@ namespace SharpSub.Data
             if (!response.Successful)
                 throw new SubsonicException(response);
 
-            IList<XElement> songElements = Utility.GetElementsFromDocument(response.ResponseXml, "song");
+            IEnumerable<XElement> songElements = Utility.GetElementsFromDocument(response.ResponseXml, "song");
             return (from songElement in songElements select new Song(songElement)).ToList();
         }
 
