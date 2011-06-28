@@ -19,7 +19,13 @@ namespace SharpSub.Data
             add { player.CurrentItemChange += value; }
             remove { player.CurrentItemChange -= value; }
         }
-        
+
+        public event _WMPOCXEvents_PlayStateChangeEventHandler PlaybackStateChanged
+        {
+            add { player.PlayStateChange += value; }
+            remove { player.PlayStateChange -= value; }
+        }
+
         public Song CurrentSong
         {
             get { return CurrentPlaylist.Where(s => s.Url == player.controls.currentItem.sourceURL).FirstOrDefault(); }
