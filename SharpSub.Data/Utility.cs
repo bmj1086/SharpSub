@@ -47,7 +47,7 @@ namespace SharpSub.Data
         /// <param name="xmlTag">The xml tag of the XElement to find</param>
         /// <param name="parent">If specified, returns XElements matching the xmltag only in the specified parent</param>
         /// <returns></returns>
-        internal static IEnumerable<XElement> GetElementsFromDocument(XDocument xDocument, string xmlTag, string parent = null)
+        internal static IList<XElement> GetElementsFromDocument(XDocument xDocument, string xmlTag, string parent = null)
         {
             try
             {

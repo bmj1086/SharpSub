@@ -2,6 +2,7 @@
 using System.Xml;
 using System;
 using System.Xml.Linq;
+using WMPLib;
 
 namespace SharpSub.Data
 {

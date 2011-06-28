@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -11,7 +13,6 @@ namespace SharpSub.Data
 {
     public class ArtistInfo
     {
-        public IEnumerable<string> Tags { get; protected set; }
         private readonly XDocument xmlDocument = null;
 
         public ArtistInfo(Stream xmlstream)
@@ -28,8 +29,9 @@ namespace SharpSub.Data
                 Where(e => e.Name.LocalName == "summary").FirstOrDefault().Value;
 
             return Regex.Replace(rawBio, "<.*?>", string.Empty)
-                .Replace("&quot;", "\"").Trim();
-            
+                .Replace("&quot;", "\"")
+                .Replace("&amp;", "&").Trim();
+
         }
 
         public IEnumerable<SimilarArtist> SimilarArtists()
@@ -44,39 +46,52 @@ namespace SharpSub.Data
 
         public string LastFmUrl()
         {
-            return xmlDocument.Elements().First().Elements().Where(e => e.Name.LocalName == "artist").Elements().Where(e => e.Name.LocalName == "url").First().Value;
+            return xmlDocument.Elements().First().Elements().
+                Where(e => e.Name.LocalName == "artist").Elements().
+                Where(e => e.Name.LocalName == "url").First().Value;
+        }
+
+        public IEnumerable<string> Tags()
+        {
+            IEnumerable<XElement> tags = xmlDocument.Elements().First().Elements().
+                Where(e => e.Name.LocalName == "artist").Elements().
+                Where(e => e.Name.LocalName == "tags").Elements();
+
+            IList<string> strTags = null;
+
+            foreach (XElement xElement in tags)
+            {
+                strTags.Add(xElement.Elements().Where(e => e.Name.LocalName == "name").First().Value);
+            }
+
+            return strTags;
         }
 
         public Bitmap Image(Size imageSize)
         {
-            try
-            {
-                var imageElements = xmlDocument.Elements().First().Elements().Where(e => e.Name.LocalName == "artist").Elements().Where(e => e.Name.LocalName == "image");
-                string imageUrl = null;
+            var imageElements = xmlDocument.Elements().First().Elements().
+                Where(e => e.Name.LocalName == "artist").Elements().
+                Where(e => e.Name.LocalName == "image");
 
-                imageUrl = (from imageElement in imageElements
-                            from xAttribute in
-                                imageElement.Attributes().Where(xAttribute => xAttribute.Name.LocalName == "size").
-                                Where(xAttribute => xAttribute.Value == imageSize.ToString().ToLower())
-                            select imageElement.Value).FirstOrDefault();
+            string imageUrl = (from imageElement in imageElements
+                                from xAttribute in
+                                    imageElement.Attributes().Where(xAttribute => xAttribute.Name.LocalName == "size").
+                                    Where(xAttribute => xAttribute.Value == imageSize.ToString().ToLower())
+                                select imageElement.Value).FirstOrDefault();
 
 
-                WebRequest request = WebRequest.Create(imageUrl);
-                Stream responseStream = request.GetResponse().GetResponseStream();
+            WebRequest request = WebRequest.Create(imageUrl);
+            Stream responseStream = request.GetResponse().GetResponseStream();
 
-                Bitmap bitmap = new Bitmap(responseStream);
+            Bitmap bitmap = new Bitmap(responseStream);
 
-                request = null;
-                responseStream = null;
+            request = null;
+            responseStream = null;
 
-                return bitmap;
-            }
-            catch
-            {
-                //TODO: Write to logger
-                return null;
-            }
+            return bitmap;
         }
+
+
 
         public enum Size
         {

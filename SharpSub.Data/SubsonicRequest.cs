@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Configuration;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -163,7 +164,7 @@ namespace SharpSub.Data
 
         }
 
-        public static IEnumerable<Artist> GetArtistList()
+        public static IList<Artist> GetArtistList()
         {
             string requestURL = BuildRequestURL(RequestType.getIndexes);
             var response = SendRequest(requestURL);
@@ -171,11 +172,11 @@ namespace SharpSub.Data
             if (!response.Successful)
                 throw new Exception(String.Format("Error returned from Subsonic server : {0}", response.ErrorMessage));
 
-            IEnumerable<XElement> artistElements = Utility.GetElementsFromDocument(response.ResponseXml, Artist.XmlTag);
+            IList<XElement> artistElements = Utility.GetElementsFromDocument(response.ResponseXml, Artist.XmlTag);
             return (from artistElement in artistElements select new Artist(artistElement)).ToList();
         }
 
-        public static IEnumerable<Album> GetAllAlbums()
+        public static IList<Album> GetAllAlbums()
         {
             return GetArtistList().SelectMany(GetArtistAlbums).ToList();
         }
@@ -194,7 +195,11 @@ namespace SharpSub.Data
 
             ThreadPool.QueueUserWorkItem(delegate
             {
-                foreach (Song song in GetAllSongs())
+                foreach (Song song in
+                    from artist in GetArtistList()
+                    from album in GetArtistAlbums(artist)
+                    from song in GetAlbumSongs(album)
+                    select song)
                 {
                     methodCallback(song);
                 }
@@ -204,7 +209,8 @@ namespace SharpSub.Data
         /// <summary>
         /// This method takes a long time to run until a method is implemented into the API.
         /// I highly suggest that you either use the GetAllSongs(methodCallback) method or 
-        /// run this in a separate thread from the UI.
+        /// run this in a separate thread from the UI. The test I ran had 800 songs and took
+        /// 3 minutes to run.
         /// </summary>
         /// <returns></returns>
         public static IEnumerable<Song> GetAllSongs()
@@ -212,12 +218,12 @@ namespace SharpSub.Data
             return GetAllAlbums().SelectMany(GetAlbumSongs);
         }
 
-        public static IEnumerable<Song> GetAlbumSongs(Album album)
+        public static IList<Song> GetAlbumSongs(Album album)
         {
             return GetAlbumSongs(album.ID);
         }
 
-        public static IEnumerable<Song> GetAlbumSongs(string albumid)
+        public static IList<Song> GetAlbumSongs(string albumid)
         {
             Dictionary<string, string> paramaters = new Dictionary<string, string> { { "id", albumid } };
             string url = BuildRequestURL(RequestType.getMusicDirectory, paramaters);
@@ -226,11 +232,11 @@ namespace SharpSub.Data
             if (!response.Successful)
                 throw new SubsonicException(response);
 
-            IEnumerable<XElement> songElements = Utility.GetElementsFromDocument(response.ResponseXml, Song.XmlTag);
+            IList<XElement> songElements = Utility.GetElementsFromDocument(response.ResponseXml, Song.XmlTag);
             return (from songElement in songElements select new Song(songElement)).ToList();
         }
 
-        public static IEnumerable<Album> GetArtistAlbums(Artist artist)
+        public static IList<Album> GetArtistAlbums(Artist artist)
         {
             Dictionary<string, string> paramaters = new Dictionary<string, string> { { "id", artist.ID } };
             string url = BuildRequestURL(RequestType.getMusicDirectory, paramaters);
@@ -239,7 +245,7 @@ namespace SharpSub.Data
             if (!response.Successful)
                 throw new Exception(String.Format("Error returned from Subsonic server :{0}", response.ErrorMessage));
 
-            IEnumerable<XElement> albumElements = Utility.GetElementsFromDocument(response.ResponseXml, Album.XmlTag);
+            IList<XElement> albumElements = Utility.GetElementsFromDocument(response.ResponseXml, Album.XmlTag);
             return (from albumElement in albumElements select new Album(albumElement)).ToList();
         }
 
@@ -268,9 +274,10 @@ namespace SharpSub.Data
                 WebResponse response = theRequest.GetResponse();
                 return new Bitmap(response.GetResponseStream());
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 //TODO: Write to logger
+                Debug.WriteLine("An exception occured in SubsonicRequest. StackTrace: {0}", ex.StackTrace);
                 return null;
             }
 
@@ -284,7 +291,7 @@ namespace SharpSub.Data
         toYear	        No		            Only return songs published before or in this year.
         musicFolderId	No		            Only return songs in the music folder with the given ID. See getMusicFolders.
          */
-        public static IEnumerable<Song> GetRandomSongs(int? size = null, string genre = null, int? fromYear = null, int? toYear = null)
+        public static IList<Song> GetRandomSongs(int? size = null, string genre = null, int? fromYear = null, int? toYear = null)
         {
             Dictionary<string, string> paramaters = new Dictionary<string, string>();
             if (size != null)
@@ -303,7 +310,7 @@ namespace SharpSub.Data
             if (!response.Successful)
                 throw new SubsonicException(response);
 
-            IEnumerable<XElement> songElements = Utility.GetElementsFromDocument(response.ResponseXml, "song");
+            IList<XElement> songElements = Utility.GetElementsFromDocument(response.ResponseXml, "song");
             return (from songElement in songElements select new Song(songElement)).ToList();
         }
 

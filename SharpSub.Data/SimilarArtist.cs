@@ -37,18 +37,27 @@ namespace SharpSub.Data
             Name = artistElement.Elements().Where(e => e.Name.LocalName == "name").First().Value;
             Url = artistElement.Elements().Where(e => e.Name.LocalName == "url").First().Value;
         }
-
+        
         public Bitmap GetImage(Size size)
         {
-            IEnumerable<XElement> images = artistElement.Elements().Where(e => e.Name.LocalName == "image");
-            string imageUrl = (from xElement in images
-                               where xElement.Attributes().Where(a => a.Name.LocalName == "size").First().Value == size.ToString().ToLower()
-                               select xElement.Value).FirstOrDefault();
+            try
+            {
+                IEnumerable<XElement> images = artistElement.Elements().Where(e => e.Name.LocalName == "image");
+                string imageUrl = (from xElement in images
+                                   where xElement.Attributes().Where(a => a.Name.LocalName == "size").First().Value == size.ToString().ToLower()
+                                   select xElement.Value).FirstOrDefault();
 
-            WebRequest request = WebRequest.Create(imageUrl);
-            Stream responseStream = request.GetResponse().GetResponseStream();
+                WebRequest request = WebRequest.Create(imageUrl);
+                Stream responseStream = request.GetResponse().GetResponseStream();
 
-            return new Bitmap(responseStream);
+                return new Bitmap(responseStream);
+            }
+            catch (Exception)
+            {
+                //TODO: write to logger
+                return null;
+            }
+            
         }
 
         public enum Size
