@@ -44,8 +44,8 @@ namespace SharpSub.Data
             Password = EncodePassword(password);
             Connected = true;
 
-            string requestURL = BuildRequestURL(RequestType.ping);
-            var response = SendRequest(requestURL);
+            string requestUrl = BuildRequestURL(RequestType.ping);
+            SubsonicResponse response = SendRequest(requestUrl);
 
             if (!response.Successful)
                 Logout();
@@ -100,10 +100,16 @@ namespace SharpSub.Data
         }
 
 
-        private static SubsonicResponse SendRequest(string requestURL)
+        private static SubsonicResponse SendRequest(string requestUrl)
         {
-            WebRequest theRequest = WebRequest.Create(requestURL);
-            Stream responseStream = theRequest.GetResponse().GetResponseStream();
+            WebRequest theRequest = WebRequest.Create(requestUrl);
+            theRequest.Timeout = 10000;
+            WebResponse response = theRequest.GetResponse();
+            
+            if (response == null) 
+                return null;
+            
+            Stream responseStream = response.GetResponseStream();
             XDocument xdoc = XDocument.Load(responseStream);
             return new SubsonicResponse(xdoc);
         }

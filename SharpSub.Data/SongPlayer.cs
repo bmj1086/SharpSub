@@ -10,20 +10,28 @@ namespace SharpSub.Data
 {
     public class SongPlayer : IDisposable
     {
-        private WindowsMediaPlayer player = new WindowsMediaPlayer();
-        public PlaybackState State = PlaybackState.Stopped;
         public IList<Song> CurrentPlaylist;
+        private WindowsMediaPlayer player = new WindowsMediaPlayer();
 
-        public event _WMPOCXEvents_CurrentItemChangeEventHandler CurrentItemChanged
+        public SongPlayer(Song song)
         {
-            add { player.CurrentItemChange += value; }
-            remove { player.CurrentItemChange -= value; }
+            player.currentPlaylist.clear();
+            player.settings.autoStart = true;
+            player.URL = song.Url;
+            MediaError += SongPlayerMediaError;
         }
 
-        public event _WMPOCXEvents_PlayStateChangeEventHandler PlaybackStateChanged
+        public SongPlayer(IList<Song> playlist)
         {
-            add { player.PlayStateChange += value; }
-            remove { player.PlayStateChange -= value; }
+            player.MediaError += PlayerMediaError;
+            player.currentPlaylist.clear();
+            CurrentPlaylist = playlist;
+            foreach (Song song in playlist)
+            {
+                player.currentPlaylist.appendItem(player.newMedia(song.Url));
+            }
+            player.controls.play();
+
         }
 
         public Song CurrentSong
@@ -43,57 +51,18 @@ namespace SharpSub.Data
             set { player.settings.setMode("loop", value); }
         }
 
-        public SongPlayer(Song song)
-        {
-            player.MediaError += PlayerMediaError;
-            player.currentPlaylist.clear();
-            player.settings.autoStart = true;
-            player.URL = song.Url;
-            player.CurrentItemChange += new _WMPOCXEvents_CurrentItemChangeEventHandler(player_CurrentItemChange);
-        }
-
-        private void player_CurrentItemChange(object pdispmedia)
-        {
-            throw new NotImplementedException();
-        }
-
-        public SongPlayer(IList<Song> playlist)
-        {
-            player.MediaError += PlayerMediaError; 
-            player.currentPlaylist.clear();
-            CurrentPlaylist = playlist;
-            foreach (Song song in playlist)
-            {
-                player.currentPlaylist.appendItem(player.newMedia(song.Url));
-            }
-            player.controls.play();
-            
-        }
-
-        void PlayerMediaError(object pMediaObject)
-        {
-            throw new Exception(pMediaObject.ToString());
-        }
-
         public int Volume
         {
             get { return player.settings.volume; }
             set { player.settings.volume = value; }
         }
-        
+
         public double Position
         {
-            get
-            {
-                return player == null ? 0 : player.controls.currentPosition;
-            }
+            get { return player == null ? 0 : player.controls.currentPosition; }
             set { player.controls.currentPosition = value; }
         }
 
-        public string PositionString(string format = "mm:ss")
-        {
-            return ToTimeFormat((int) Position, format);
-        }
         public bool Mute
         {
             get { return player.settings.mute; }
@@ -110,55 +79,17 @@ namespace SharpSub.Data
             get { return CurrentPlaylist.IndexOf(CurrentSong); }
         }
 
-        public string DurationString(string format = "mm:ss")
+        public WMPPlayState PlaybackState
         {
-            return ToTimeFormat((int) CurrentSong.Duration, format);
+            get { return player.playState; }
         }
 
-        private string ToTimeFormat(int seconds, string format)
+        public string PlaybackStateString
         {
-            DateTime dt = DateTime.MinValue.AddSeconds(seconds);
-            return dt.ToString("m:ss");
+            get { return PlaybackState.ToString().Replace("wmpps", String.Empty); }
         }
 
-        public void PlayItemAt(int index)
-        {
-            player.controls.stop();
-            player.controls.currentItem = player.currentPlaylist.Item[index];
-            player.controls.play();
-        }
-
-        void PlayerPlayStateChange(int newState)
-        {
-            if ((WMPPlayState)newState == WMPPlayState.wmppsStopped ||
-                (WMPPlayState)newState == WMPPlayState.wmppsReady)
-                State = PlaybackState.Stopped;
-            if ((WMPPlayState)newState == WMPPlayState.wmppsPaused)
-                State = PlaybackState.Paused;
-            if ((WMPPlayState)newState == WMPPlayState.wmppsPlaying)
-                State = PlaybackState.Stopped;
-            if ((WMPPlayState)newState == WMPPlayState.wmppsBuffering)
-                State = PlaybackState.Buffering;
-            else State = PlaybackState.Unknown;
-        }
-
-        public void Stop()
-        {
-            player.controls.stop();
-        }
-
-        public void Pause()
-        {
-            if (State == PlaybackState.Playing)
-                player.controls.pause();
-        }
-
-        public void Resume()
-        {
-            if (State == PlaybackState.Paused)
-                player.controls.play();
-        }
-
+        #region IDisposable Members
 
         public void Dispose()
         {
@@ -172,10 +103,78 @@ namespace SharpSub.Data
             }
         }
 
-        public enum PlaybackState
+        #endregion
+
+        public event _WMPOCXEvents_MediaErrorEventHandler MediaError
         {
-            Stopped, Playing, Paused, Buffering, Unknown
+            add { player.MediaError += value; }
+            remove { player.MediaError -= value; }
         }
+        public event _WMPOCXEvents_CurrentItemChangeEventHandler CurrentItemChanged
+        {
+            add { player.CurrentItemChange += value; }
+            remove { player.CurrentItemChange -= value; }
+        }
+
+        public event _WMPOCXEvents_PlayStateChangeEventHandler PlaybackStateChanged
+        {
+            add { player.PlayStateChange += value; }
+            remove { player.PlayStateChange -= value; }
+        }
+
+        void SongPlayerMediaError(object pMediaObject)
+        {
+            try
+            {
+                player.controls.play();
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+        void PlayerMediaError(object pMediaObject)
+        {
+            throw new Exception(pMediaObject.ToString());
+        }
+
+        public string PositionString(string format = "mm:ss")
+        {
+            return ToTimeFormat((int)Position, format);
+        }
+
+        public string DurationString(string format = "mm:ss")
+        {
+            return ToTimeFormat((int)CurrentSong.Duration, format);
+        }
+
+        private string ToTimeFormat(int seconds, string format)
+        {
+            DateTime dt = DateTime.MinValue.AddSeconds(seconds);
+            return dt.ToString("m:ss");
+        }
+
+        public void PlayItemAt(int index)
+        {
+            player.controls.currentItem = player.currentPlaylist.Item[index];
+            player.controls.play();
+        }
+
+        public void Stop()
+        {
+            player.controls.stop();
+        }
+
+        public void Pause()
+        {
+            player.controls.pause();
+        }
+
+        public void Resume()
+        {
+            player.controls.play();
+        }
+
 
         public void Skip()
         {
