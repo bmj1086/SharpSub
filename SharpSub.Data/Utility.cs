@@ -52,13 +52,14 @@ namespace SharpSub.Data
             try
             {
                 if (parent == null)
-                    return (from e in xDocument.Descendants()
-                            where e.Name.LocalName.ToLower() == xmlTag
-                            select e).ToList();
+                    return xDocument.Descendants().
+                        Where(e => e.Name.LocalName.ToLower() == xmlTag).
+                        ToList();
 
-                return (from e in xDocument.Descendants()
-                        where e.Name.LocalName.ToLower() == xmlTag && e.Parent.Name == parent
-                        select e).ToList();
+                return xDocument.Descendants().
+                    Where(e => e.Name.LocalName.ToLower() == xmlTag).
+                    Where(e => e.Parent.Name == parent).
+                    ToList();
             }
             catch
             {

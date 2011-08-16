@@ -1,13 +1,41 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 
 namespace SharpSub.Data
 {
-    class SubsonicException : Exception
+    [Serializable]
+    public class SubsonicException : Exception
     {
-        public SubsonicException(SubsonicResponse response) : base(String.Format("An error returned from the Subsonic server: {0}", response.ErrorMessage))
+        //
+        // For guidelines regarding the creation of new exception types, see
+        //    http://msdn.microsoft.com/library/default.asp?url=/library/en-us/cpgenref/html/cpconerrorraisinghandlingguidelines.asp
+        // and
+        //    http://msdn.microsoft.com/library/default.asp?url=/library/en-us/dncscol/html/csharp07192001.asp
+        //
+
+        public SubsonicException()
+        {
+        }
+
+        public SubsonicException(SubsonicResponse response)
+            : base(String.Format("An error returned from Subsonic server, Subsonic Message: {0}", response.ErrorMessage))
+        {
+        }
+
+        public SubsonicException(string message) : base(message)
+        {
+        }
+
+        public SubsonicException(string message, Exception inner) : base(message, inner)
+        {
+        }
+
+        protected SubsonicException(
+            SerializationInfo info,
+            StreamingContext context) : base(info, context)
         {
         }
     }

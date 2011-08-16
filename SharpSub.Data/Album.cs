@@ -1,30 +1,64 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
-using System.Xml;
 using System.Xml.Linq;
 
 namespace SharpSub.Data
 {
+    [Serializable]
     public class Album
     {
-        internal const string XmlTag = "child";
-
-        public Album(XElement itemElement)
-        {
-            _itemElement = itemElement;
-
-            ID = Utility.GetElementAttribute(itemElement, Attribute.ID.ToString());
-            CoverArtID = Utility.GetElementAttribute(itemElement, Attribute.CoverArt.ToString());
-            Parent = Utility.GetElementAttribute(itemElement, Attribute.Parent.ToString());
-            Title = Utility.GetElementAttribute(itemElement, Attribute.Title.ToString());
-            IsDir = Convert.ToBoolean(Utility.GetElementAttribute(itemElement, Attribute.IsDir.ToString()));
-            Artist = Utility.GetElementAttribute(itemElement, Attribute.Artist.ToString());}
+        #region Attribute enum
 
         public enum Attribute
         {
-            ID, Parent, Title, IsDir, Album, Artist, Duration, BitRate, Track,
-            Year, Genre, Size, Suffix, ContentType, IsVideo, CoverArt, Path
+            Id,
+            Parent,
+            Title,
+            IsDir,
+            Album,
+            Artist,
+            Duration,
+            BitRate,
+            Track,
+            Year,
+            Genre,
+            Size,
+            Suffix,
+            ContentType,
+            IsVideo,
+            CoverArt,
+            Path
+        }
 
+        #endregion
+
+        internal const string XmlTag = "child";
+
+        public readonly XElement ItemElement;
+
+        public Album(XElement itemElement)
+        {
+            ItemElement = itemElement;
+
+            Id = Utility.GetElementAttribute(itemElement, Attribute.Id.ToString());
+            CoverArtId = Utility.GetElementAttribute(itemElement, Attribute.CoverArt.ToString());
+            Parent = Utility.GetElementAttribute(itemElement, Attribute.Parent.ToString());
+            Title = Utility.GetElementAttribute(itemElement, Attribute.Title.ToString());
+            IsDir = Convert.ToBoolean(Utility.GetElementAttribute(itemElement, Attribute.IsDir.ToString()));
+            Artist = Utility.GetElementAttribute(itemElement, Attribute.Artist.ToString());
+        }
+
+        public string Id { get; protected set; }
+        public string Parent { get; protected set; }
+        public string Title { get; protected set; }
+        public bool? IsDir { get; protected set; }
+        public string Artist { get; protected set; }
+        internal string CoverArtId { get; set; }
+
+        public IEnumerable<Song> GetSongs()
+        {
+            return SubsonicRequest.GetAlbumSongs(this);
         }
 
         public override string ToString()
@@ -32,18 +66,9 @@ namespace SharpSub.Data
             return Title;
         }
 
-        public readonly XElement _itemElement;
-        public string ID { get; protected set; }
-        public string Parent { get; protected set; }
-        public string Title { get; protected set; }
-        public bool? IsDir { get; protected set; }
-        public string Artist { get; protected set; }
-        internal string CoverArtID { get; set; }
-
         public Bitmap CoverArt(int? size = null)
         {
             return SubsonicRequest.GetAlbumArt(this, size);
         }
-        
     }
 }

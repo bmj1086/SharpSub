@@ -13,7 +13,6 @@ namespace SharpSub.Data
         public SubsonicResponse(XDocument responseXml)
         {
             ResponseXml = responseXml;
-            
         }
 
         /// <summary>

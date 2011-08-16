@@ -15,14 +15,17 @@ namespace SharpSub.Data
 
         public SongPlayer(Song song)
         {
-            player.currentPlaylist.clear();
-            player.settings.autoStart = true;
-            player.URL = song.Url;
-            MediaError += SongPlayerMediaError;
+            StartPlayer(new List<Song>{ song });
         }
 
         public SongPlayer(IList<Song> playlist)
         {
+            StartPlayer(playlist);
+        }
+
+        private void StartPlayer(IList<Song> playlist)
+        {
+            MediaError += SongPlayerMediaError;
             player.MediaError += PlayerMediaError;
             player.currentPlaylist.clear();
             CurrentPlaylist = playlist;
@@ -31,7 +34,6 @@ namespace SharpSub.Data
                 player.currentPlaylist.appendItem(player.newMedia(song.Url));
             }
             player.controls.play();
-
         }
 
         public Song CurrentSong
@@ -96,10 +98,10 @@ namespace SharpSub.Data
             try
             {
                 player.controls.stop();
-                player = null;
             }
-            catch
+            finally
             {
+                player = null;
             }
         }
 

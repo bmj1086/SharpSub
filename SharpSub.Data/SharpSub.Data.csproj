@@ -63,10 +63,9 @@
   <ItemGroup>
     <Compile Include="Album.cs" />
     <Compile Include="Artist.cs" />
-    <Compile Include="ArtistInfo.cs" />
     <Compile Include="Cache.cs" />
+    <Compile Include="CacheType.cs" />
     <Compile Include="Playback.cs" />
-    <Compile Include="LastFm.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -77,7 +76,6 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="SimilarArtist.cs" />
     <Compile Include="SongPlayer.cs" />
     <Compile Include="SubsonicException.cs" />
     <Compile Include="SubsonicResponse.cs" />
@@ -87,7 +85,9 @@
     <Compile Include="Utility.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

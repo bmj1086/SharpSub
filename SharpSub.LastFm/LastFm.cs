@@ -4,10 +4,9 @@ using System.IO;
 using System.Net;
 using System.Text;
 using System.Web;
-using System.Xml;
-using System.Configuration;
+using SharpSub.Data;
 
-namespace SharpSub.Data
+namespace SharpSub.LastFm
 {
     public class LastFm
     {

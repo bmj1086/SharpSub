@@ -6,10 +6,11 @@ using WMPLib;
 
 namespace SharpSub.Data
 {
+    [Serializable]
     public class Song
     {
         private readonly XElement _itemElement;
-        internal const string XmlTag = "child";
+        internal const string XmlTag = "song";
         
         
         public Song(XElement itemElement)

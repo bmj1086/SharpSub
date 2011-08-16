@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Xml.Linq;
-using System.Text;
-using System.Xml.Serialization;
-using System.Drawing;
 
 /*
 <artist>
@@ -22,7 +20,7 @@ http://userserve-ak.last.fm/serve/_/198417/Brandon+Boyd.jpg
 </artist>
 */
 
-namespace SharpSub.Data
+namespace SharpSub.LastFm
 {
     public class SimilarArtist
     {

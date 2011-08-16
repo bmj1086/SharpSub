@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
-using System.Web;
 
-namespace SharpSub.Data
+namespace SharpSub.LastFm
 {
     public class ArtistInfo
     {
@@ -67,7 +64,7 @@ namespace SharpSub.Data
             return strTags;
         }
 
-        public Bitmap Image(Size imageSize)
+        public Bitmap Image(ArtistImageSize imageSize)
         {
             var imageElements = xmlDocument.Elements().First().Elements().
                 Where(e => e.Name.LocalName == "artist").Elements().
@@ -90,14 +87,6 @@ namespace SharpSub.Data
 
             return bitmap;
         }
-
-
-
-        public enum Size
-        {
-            Small, Medium, Large, ExtraLarge, Mega
-        }
-
 
     }
 }

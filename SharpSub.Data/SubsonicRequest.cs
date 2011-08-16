@@ -19,15 +19,15 @@ namespace SharpSub.Data
 {
     public class SubsonicRequest
     {
-        public static bool Connected { get; private set; }
-        public static string ServerURL { get; private set; }
-        public static string Username { get; set; }
-        private static string Password { get; set; }
         private const string NOT_CONNECTED_MESSAGE = "The server is not connected. Use the Login method first.";
         private const string API_VERSION = "1.5.0";
         private const string APP_NAME = "SharpSub";
 
         private static readonly List<int> AllowedBitrates = new List<int> { 0, 32, 40, 48, 56, 64, 80, 96, 112, 128, 160, 192, 224, 256, 320 };
+        public static bool Connected { get; private set; }
+        public static string ServerURL { get; private set; }
+        public static string Username { get; set; }
+        private static string Password { get; set; }
 
         /// <summary>
         /// If successful, sets the Connected property to true and allows
@@ -44,7 +44,7 @@ namespace SharpSub.Data
             Password = EncodePassword(password);
             Connected = true;
 
-            string requestUrl = BuildRequestURL(RequestType.ping);
+            string requestUrl = BuildRequestUrl(RequestType.ping);
             SubsonicResponse response = SendRequest(requestUrl);
 
             if (!response.Successful)
@@ -87,7 +87,7 @@ namespace SharpSub.Data
             /*if (!String.IsNullOrEmpty(format))
                 parameters.Add("format", format);*/
 
-            string requestURL = BuildRequestURL(RequestType.stream, parameters);
+            string requestURL = BuildRequestUrl(RequestType.stream, parameters);
             WebRequest request = WebRequest.Create(requestURL);
             WebResponse response = request.GetResponse();
             Stream dataStream = response.GetResponseStream();
@@ -134,7 +134,7 @@ namespace SharpSub.Data
         /// <param name="requestType">The request type. Comes after /rest/ in the url.</param>
         /// <param name="additionalParameters">Parameters required by the request type</param>
         /// <returns>URL in string format to use to get the request.</returns>
-        private static string BuildRequestURL(RequestType requestType, Dictionary<string, string> additionalParameters = null)
+        private static string BuildRequestUrl(RequestType requestType, Dictionary<string, string> additionalParameters = null)
         {
             if (!Connected)
                 throw new WebException(NOT_CONNECTED_MESSAGE);
@@ -172,19 +172,18 @@ namespace SharpSub.Data
 
         public static IList<Artist> GetArtistList()
         {
-            string requestURL = BuildRequestURL(RequestType.getIndexes);
-            var response = SendRequest(requestURL);
+            string requestUrl = BuildRequestUrl(RequestType.getIndexes);
+            SubsonicResponse response = SendRequest(requestUrl);
 
             if (!response.Successful)
-                throw new Exception(String.Format("Error returned from Subsonic server : {0}", response.ErrorMessage));
+                throw new SubsonicException(response);
 
-            IList<XElement> artistElements = Utility.GetElementsFromDocument(response.ResponseXml, Artist.XmlTag);
-            return (from artistElement in artistElements select new Artist(artistElement)).ToList();
+            return Utility.GetElementsFromDocument(response.ResponseXml, Artist.XmlTag).Select(e => new Artist(e)).ToList();
         }
 
         public static IList<Album> GetAllAlbums()
         {
-            return GetArtistList().SelectMany(GetArtistAlbums).ToList();
+            return GetArtistList().SelectMany(a => GetArtistAlbums(a)).ToList();
         }
 
         /// <summary>
@@ -226,13 +225,13 @@ namespace SharpSub.Data
 
         public static IList<Song> GetAlbumSongs(Album album)
         {
-            return GetAlbumSongs(album.ID);
+            return GetAlbumSongs(album.Id);
         }
 
         public static IList<Song> GetAlbumSongs(string albumid)
         {
             Dictionary<string, string> paramaters = new Dictionary<string, string> { { "id", albumid } };
-            string url = BuildRequestURL(RequestType.getMusicDirectory, paramaters);
+            string url = BuildRequestUrl(RequestType.getMusicDirectory, paramaters);
             var response = SendRequest(url);
 
             if (!response.Successful)
@@ -242,17 +241,20 @@ namespace SharpSub.Data
             return (from songElement in songElements select new Song(songElement)).ToList();
         }
 
-        public static IList<Album> GetArtistAlbums(Artist artist)
+        public static IEnumerable<Album> GetArtistAlbums(Artist artist, bool ignoreCache = false)
         {
+            if (!ignoreCache && Cache.CashExists(CacheType.Index))
+                return Cache.GetCachedAlbums(artist);
+
             Dictionary<string, string> paramaters = new Dictionary<string, string> { { "id", artist.ID } };
-            string url = BuildRequestURL(RequestType.getMusicDirectory, paramaters);
+            string url = BuildRequestUrl(RequestType.getMusicDirectory, paramaters);
             var response = SendRequest(url);
 
             if (!response.Successful)
                 throw new Exception(String.Format("Error returned from Subsonic server :{0}", response.ErrorMessage));
 
-            IList<XElement> albumElements = Utility.GetElementsFromDocument(response.ResponseXml, Album.XmlTag);
-            return (from albumElement in albumElements select new Album(albumElement)).ToList();
+            IEnumerable<XElement> albumElements = Utility.GetElementsFromDocument(response.ResponseXml, Album.XmlTag);
+            return (from albumElement in albumElements select new Album(albumElement));
         }
 
 
@@ -262,12 +264,13 @@ namespace SharpSub.Data
             string coverArtID = String.Empty;
 
             if (!(albumOrSong is Album) && !(albumOrSong is Song))
-                throw new Exception("albumOrSong must be an instance of an Album or a Song");
+                throw new ArgumentException("Must be an instance of an Album or Song", "albumOrSong");
             if (albumOrSong is Album)
-                coverArtID = (albumOrSong as Album).CoverArtID;
+                coverArtID = (albumOrSong as Album).CoverArtId;
             if (albumOrSong is Song)
                 coverArtID = (albumOrSong as Song).CoverArtID;
 
+            
             var param = new Dictionary<string, string> { { "id", coverArtID } };
 
             if (size != null)
@@ -275,7 +278,7 @@ namespace SharpSub.Data
 
             try
             {
-                string requestURL = BuildRequestURL(RequestType.getCoverArt, param);
+                string requestURL = BuildRequestUrl(RequestType.getCoverArt, param);
                 WebRequest theRequest = WebRequest.Create(requestURL);
                 WebResponse response = theRequest.GetResponse();
                 return new Bitmap(response.GetResponseStream());
@@ -289,43 +292,35 @@ namespace SharpSub.Data
 
         }
 
-        /*
-        Parameter	    Required	Default	Comment
-        size	        No	        10	    The maximum number of songs to return. Max 500.
-        genre	        No		            Only returns songs belonging to this genre.
-        fromYear	    No		            Only return songs published after or in this year.
-        toYear	        No		            Only return songs published before or in this year.
-        musicFolderId	No		            Only return songs in the music folder with the given ID. See getMusicFolders.
-         */
-        public static IList<Song> GetRandomSongs(int? size = null, string genre = null, int? fromYear = null, int? toYear = null)
+        public static IList<Song> GetRandomSongs(int? size = null, string genre = null, int? fromYear = null, int? toYear = null, string musicFolderId = null)
         {
             Dictionary<string, string> paramaters = new Dictionary<string, string>();
             if (size != null)
                 paramaters.Add("size", size.ToString());
             if (genre != null)
-                paramaters.Add("size", genre.ToString());
+                paramaters.Add("genre", genre);
             if (fromYear != null)
-                paramaters.Add("size", fromYear.ToString());
+                paramaters.Add("fromYear", fromYear.ToString());
             if (toYear != null)
-                paramaters.Add("size", toYear.ToString());
+                paramaters.Add("toYear", toYear.ToString());
+            if (musicFolderId != null)
+                paramaters.Add("musicFolderId", musicFolderId);
 
-
-            string url = BuildRequestURL(RequestType.getRandomSongs, paramaters);
+            string url = BuildRequestUrl(RequestType.getRandomSongs, paramaters);
             SubsonicResponse response = SendRequest(url);
 
             if (!response.Successful)
                 throw new SubsonicException(response);
 
-            IList<XElement> songElements = Utility.GetElementsFromDocument(response.ResponseXml, "song");
-            return (from songElement in songElements select new Song(songElement)).ToList();
+            return Utility.GetElementsFromDocument(response.ResponseXml, Song.XmlTag).Select(e => new Song(e)).ToList();
         }
 
         internal static string GetSongUrl(Song song)
         {
-            Dictionary<string, string> parameters = new Dictionary<string, string>();
-            parameters.Add("id", song.ID);
-            return BuildRequestURL(RequestType.stream, parameters);
+            var parameters = new Dictionary<string, string> {{"id", song.ID}};
+            return BuildRequestUrl(RequestType.stream, parameters);
         }
+
     }
 
 
@@ -345,7 +340,10 @@ namespace SharpSub.Data
         search2,
         getPlaylists,
         getPlaylist,
+        getPodcasts,
+        getShares,
         createPlaylist,
+        createShare,
         deletePlaylist,
         download,
         stream,
@@ -360,7 +358,10 @@ namespace SharpSub.Data
         getAlbumList,
         getRandomSongs,
         getLyrics,
-        jukeboxControl
+        jukeboxControl,
+        updateShare,
+        deleteShare,
+        setRating
 
     }
 
